@@ -441,33 +441,37 @@ export default function Page() {
     setError(null);
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      setError("Please select a file first.");
-      return;
-    }
+const handleUpload = async () => {
+  if (!file) {
+    setError("Please select a file first.");
+    return;
+  }
 
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    setEditedData(null);
+  setLoading(true);
+  setError(null);
+  setResult(null);
+  setEditedData(null);
 
-    try {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const text = buffer.toString('utf8');
-      
-      // 🔥 Client-side advanced parsing
-      const parsedData = parseResumeText(text);
-      
-      setResult(parsedData);
-      setEditedData(parsedData);
-    } catch (e: any) {
-      console.error('Parse error:', e);
-      setError("Failed to parse resume. Please try another file.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    // ✅ FIXED: Pure browser TextDecoder
+    const arrayBuffer = await file.arrayBuffer();
+    const uint8Array = new Uint8Array(arrayBuffer);
+    const text = new TextDecoder('utf-8').decode(uint8Array);
+    
+    // Parse with advanced regex
+    const parsedData = parseResumeText(text);
+    
+    setResult(parsedData);
+    setEditedData(parsedData);
+  } catch (e: any) {
+    console.error('Parse error:', e);
+    setError("Failed to parse resume. Please try another file.");
+  } finally {
+    setLoading(false);
+  }
+};
+  
+
 
   const handleFieldUpdate = (path: string, value: string) => {
     setEditedData(prev => {
