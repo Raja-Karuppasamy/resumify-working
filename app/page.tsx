@@ -388,6 +388,20 @@ export default function Page() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<any>(null);
   const [editedData, setEditedData] = useState<any>(null);
+ 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFile = e.target.files?.[0] || null;
+
+  if (selectedFile && selectedFile.size > MAX_SIZE_MB * 1024 * 1024) {
+    setError(`File is too large! Max size is ${MAX_SIZE_MB} MB`);
+    setFile(null);
+    return;
+  }
+
+  setError(null);
+  setFile(selectedFile);
+};
+
 
   const handleUpload = async () => {
   if (!file) {
