@@ -389,28 +389,6 @@ export default function Page() {
   const [result, setResult] = useState<any>(null);
   const [editedData, setEditedData] = useState<any>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || !files[0]) return;
-
-    const selectedFile = files[0];
-
-    if (selectedFile.type !== "application/pdf") {
-      setError("Please select a valid PDF file.");
-      setFile(null);
-      return;
-    }
-
-    if (selectedFile.size > MAX_SIZE_MB * 1024 * 1024) {
-      setError(`File too large. Max size is ${MAX_SIZE_MB} MB.`);
-      setFile(null);
-      return;
-    }
-
-    setFile(selectedFile);
-    setError(null);
-  };
-
   const handleUpload = async () => {
   if (!file) {
     setError("Please select a file first.");
@@ -418,8 +396,7 @@ export default function Page() {
   }
 
   if (!API_URL) {
-    console.error("Missing NEXT_PUBLIC_API_URL");
-    setError("API_URL is not configured. Please contact support.");
+    setError("API_URL is not configured.");
     return;
   }
 
@@ -434,7 +411,6 @@ export default function Page() {
 
     const res = await fetch(`${API_URL.replace(/\/$/, "")}/parse`, {
       method: "POST",
-      // keep API key header only if you actually use it
       headers: {
         ...(API_KEY ? { "x-api-key": API_KEY } : {}),
       },
@@ -442,24 +418,24 @@ export default function Page() {
     });
 
     if (!res.ok) {
-      // try to read JSON error first
+      // Read body ONCE depending on content type
+      const contentType = res.headers.get("content-type") || "";
       let message = `Backend error (${res.status})`;
-      try {
-        const maybeJson = await res.json();
-        if (maybeJson?.error) {
-          message += `: ${maybeJson.error}`;
-          throw new Error(message);
+
+      if (contentType.includes("application/json")) {
+        const errJson: any = await res.json().catch(() => null);
+        if (errJson && typeof errJson.error === "string") {
+          message += `: ${errJson.error}`;
         }
-      } catch {
-        // fallback to text
-        const text = await res.text();
-        if (text) {
-          message += `: ${text.slice(0, 200)}`;
-        }
-        throw new Error(message);
+      } else {
+        const text = await res.text().catch(() => "");
+        if (text) message += `: ${text.slice(0, 200)}`;
       }
+
+      throw new Error(message);
     }
 
+    // Success: read JSON once
     const parsedData = await res.json();
     setResult(parsedData);
     setEditedData(parsedData);
