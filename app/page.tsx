@@ -6,11 +6,15 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY ?? "";
 const MAX_SIZE_MB = 10;
 
+// ---------- Utils ----------
+
 function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
   return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 }
+
+// ---------- Editable Field ----------
 
 function EditableField({
   label,
@@ -73,7 +77,9 @@ function EditableField({
         </div>
       ) : (
         <div className="flex items-center justify-between group">
-          <p className="text-gray-900 font-medium">{value || "N/A"}</p>
+          <p className="text-gray-900 font-medium break-words">
+            {value || "N/A"}
+          </p>
           <button
             onClick={() => setIsEditing(true)}
             className="text-sm text-indigo-600 hover:text-indigo-800 hidden group-hover:inline-flex transition-all"
@@ -86,7 +92,15 @@ function EditableField({
   );
 }
 
-function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (path: string, value: string) => void }) {
+// ---------- Resume Display ----------
+
+function ResumeDisplay({
+  data,
+  onFieldUpdate,
+}: {
+  data: any;
+  onFieldUpdate: (path: string, value: string) => void;
+}) {
   const getArray = (key: string) => (Array.isArray(data[key]) ? data[key] : []);
 
   return (
@@ -136,26 +150,44 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
           <EditableField
             label="Role Level"
             value={data.role_level || ""}
-            confidence={0.85}
+            confidence={data.role_level_confidence ?? 0.85}
             onCorrect={(val) => onFieldUpdate("role_level", val)}
           />
           <EditableField
             label="Primary Role"
             value={data.primary_role || ""}
-            confidence={0.9}
+            confidence={data.primary_role_confidence ?? 0.9}
             onCorrect={(val) => onFieldUpdate("primary_role", val)}
           />
           <EditableField
             label="Total Experience"
-            value={data.years_of_experience_total ? `${data.years_of_experience_total} years` : ""}
-            confidence={0.8}
-            onCorrect={(val) => onFieldUpdate("years_of_experience_total", val.replace(" years", ""))}
+            value={
+              data.years_of_experience_total
+                ? `${data.years_of_experience_total} years`
+                : ""
+            }
+            confidence={data.years_of_experience_total_confidence ?? 0.8}
+            onCorrect={(val) =>
+              onFieldUpdate(
+                "years_of_experience_total",
+                val.replace(" years", "")
+              )
+            }
           />
           <EditableField
             label="Tech Experience"
-            value={data.years_of_experience_in_tech ? `${data.years_of_experience_in_tech} years` : ""}
-            confidence={0.8}
-            onCorrect={(val) => onFieldUpdate("years_of_experience_in_tech", val.replace(" years", ""))}
+            value={
+              data.years_of_experience_in_tech
+                ? `${data.years_of_experience_in_tech} years`
+                : ""
+            }
+            confidence={data.years_of_experience_in_tech_confidence ?? 0.8}
+            onCorrect={(val) =>
+              onFieldUpdate(
+                "years_of_experience_in_tech",
+                val.replace(" years", "")
+              )
+            }
           />
         </div>
 
@@ -163,20 +195,26 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
           <EditableField
             label="GitHub"
             value={data.github || ""}
-            confidence={0.95}
+            confidence={data.github_confidence ?? 0.95}
             onCorrect={(val) => onFieldUpdate("github", val)}
           />
           <EditableField
             label="Portfolio"
             value={data.portfolio || ""}
-            confidence={0.9}
+            confidence={data.portfolio_confidence ?? 0.9}
             onCorrect={(val) => onFieldUpdate("portfolio", val)}
           />
         </div>
 
         {/* Skills Chips */}
         <div className="mt-6 space-y-4">
-          {["programming_languages", "frameworks_and_libraries", "cloud_and_infra", "databases", "dev_tools"].map((skillType) => {
+          {[
+            "programming_languages",
+            "frameworks_and_libraries",
+            "cloud_and_infra",
+            "databases",
+            "dev_tools",
+          ].map((skillType) => {
             const skills = getArray(skillType);
             if (skills.length === 0) return null;
 
@@ -198,7 +236,9 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
 
             return (
               <div key={skillType}>
-                <p className="text-sm font-medium text-gray-700 mb-2">{labels[skillType]}</p>
+                <p className="text-sm font-medium text-gray-700 mb-2">
+                  {labels[skillType]}
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {skills.map((skill: string, idx: number) => (
                     <span
@@ -225,7 +265,7 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
           <EditableField
             label="Summary"
             value={data.summary}
-            confidence={data.summary_confidence || 0.85}
+            confidence={data.summary_confidence ?? 0.85}
             onCorrect={(val) => onFieldUpdate("summary", val)}
           />
         </div>
@@ -240,29 +280,42 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
           </h3>
           <div className="space-y-4">
             {getArray("experience").map((exp: any, idx: number) => (
-              <div className="border-l-4 border-indigo-400 pl-5 py-4 bg-indigo-50/50 rounded-lg" key={idx}>
+              <div
+                className="border-l-4 border-indigo-400 pl-5 py-4 bg-indigo-50/50 rounded-lg"
+                key={idx}
+              >
                 <EditableField
                   label="Job Title"
                   value={exp.job_title || "N/A"}
-                  confidence={exp.job_title_confidence || 0.9}
-                  onCorrect={(val) => onFieldUpdate(`experience[${idx}].job_title`, val)}
+                  confidence={exp.job_title_confidence ?? 0.9}
+                  onCorrect={(val) =>
+                    onFieldUpdate(`experience[${idx}].job_title`, val)
+                  }
                 />
                 <EditableField
                   label="Company"
                   value={exp.company || "N/A"}
-                  confidence={exp.company_confidence || 0.9}
-                  onCorrect={(val) => onFieldUpdate(`experience[${idx}].company`, val)}
+                  confidence={exp.company_confidence ?? 0.9}
+                  onCorrect={(val) =>
+                    onFieldUpdate(`experience[${idx}].company`, val)
+                  }
                 />
                 <div className="text-sm text-gray-600 mt-2">
-                  {exp.start_date && exp.end_date ? `${exp.start_date} - ${exp.end_date}` : "Dates N/A"}
+                  {exp.start_date && exp.end_date
+                    ? `${exp.start_date} - ${exp.end_date}`
+                    : "Dates N/A"}
                 </div>
                 {exp.responsibilities?.length > 0 && (
                   <ul className="list-disc pl-5 mt-3 text-sm text-gray-700 space-y-1">
-                    {exp.responsibilities.slice(0, 5).map((resp: string, rIdx: number) => (
-                      <li key={rIdx}>{resp}</li>
-                    ))}
+                    {exp.responsibilities.slice(0, 5).map(
+                      (resp: string, rIdx: number) => (
+                        <li key={rIdx}>{resp}</li>
+                      )
+                    )}
                     {exp.responsibilities.length > 5 && (
-                      <li className="text-xs text-gray-500">... and {exp.responsibilities.length - 5} more</li>
+                      <li className="text-xs text-gray-500">
+                        ... and {exp.responsibilities.length - 5} more
+                      </li>
                     )}
                   </ul>
                 )}
@@ -281,19 +334,26 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
           </h3>
           <div className="space-y-4">
             {getArray("education").map((edu: any, idx: number) => (
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg" key={idx}>
+              <div
+                className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg"
+                key={idx}
+              >
                 <div className="flex-1">
                   <EditableField
                     label="Degree"
                     value={edu.degree || edu.program || "N/A"}
-                    confidence={edu.degree_confidence || 0.95}
-                    onCorrect={(val) => onFieldUpdate(`education[${idx}].degree`, val)}
+                    confidence={edu.degree_confidence ?? 0.95}
+                    onCorrect={(val) =>
+                      onFieldUpdate(`education[${idx}].degree`, val)
+                    }
                   />
                   <EditableField
                     label="Institution"
                     value={edu.institution || edu.school || "N/A"}
-                    confidence={edu.institution_confidence || 0.95}
-                    onCorrect={(val) => onFieldUpdate(`education[${idx}].institution`, val)}
+                    confidence={edu.institution_confidence ?? 0.95}
+                    onCorrect={(val) =>
+                      onFieldUpdate(`education[${idx}].institution`, val)
+                    }
                   />
                 </div>
                 <div className="text-sm font-medium text-gray-700 bg-white px-3 py-1 rounded-lg border">
@@ -320,210 +380,7 @@ function ResumeDisplay({ data, onFieldUpdate }: { data: any; onFieldUpdate: (pat
   );
 }
 
-// 🔥 IMPROVED REGEX PARSING FUNCTION - Much more accurate
-function parseResumeText(text: string): any {
-  const cleanText = text
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .replace(/[^\w\s@.\-,+()\/\\]/g, ' ')
-    .trim();
-
-  const lines = text
-    .split(/\r?\n/)
-    .map(line => line.trim())
-    .filter(Boolean);
-
-  // 🎯 IMPROVED Name Detection - First prominent proper noun line
-  let name = '';
-  const nameCandidates = lines.slice(0, 5).filter(line => {
-    const nameRegex = /^[A-Z][a-z]+(?:\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)?\s*$/;
-    return nameRegex.test(line) && line.length >= 6 && line.length <= 60;
-  });
-  name = nameCandidates[0] || lines[0]?.match(/^[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2}/)?.[0] || '';
-
-  // 🎯 Email - Robust pattern
-  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-  const emailMatch = Array.from(cleanText.matchAll(emailRegex)).map(m => m[0])[0];
-  const email = emailMatch || '';
-
-  // 🎯 Phone - International + US/CA formats
-  const phoneRegex = /(\+?1[-.\s]?)?\(?[2-9][0-8]\d\)?[-.\s]?[2-9]\d{2}[-.\s]?\d{4}|\+?[\d\s\-\(\)]{10,15}[\d]/g;
-  const phoneMatches = Array.from(cleanText.matchAll(phoneRegex)).map(m => m[0].replace(/[^\d+]/g, ''));
-  const phone = phoneMatches.find(p => p.length >= 10) || phoneMatches[0] || '';
-
-  // 🎯 Location - City, State format
-  const locationRegex = /[A-Z][a-zA-Z\s]+,\s*[A-Z]{2}(?:\s+\d{5})?/;
-  const locationMatch = lines.find(line => locationRegex.test(line)) || '';
-  const location = locationMatch.replace(/,\s*\d{5,}/.g, '').trim() || '';
-
-  // 🎯 Experience Years - Multiple patterns
-  const expPatterns = [
-    /(\d+(?:\.\d+)?)\s*(?:year|yr|yoe|years?)/gi,
-    /(\d+)\+\s*years?/gi,
-    /experience[:\s]*(\d+(?:\.\d+)?)/gi
-  ];
-  let totalYears = 0;
-  let techYears = 0;
-  
-  for (const pattern of expPatterns) {
-    const matches = [...cleanText.matchAll(pattern)];
-    if (matches.length > 0) {
-      totalYears = parseFloat(matches[0][1]);
-      if (matches.length > 1) techYears = parseFloat(matches[1][1]);
-      break;
-    }
-  }
-
-  // 🎯 Role Detection - More comprehensive
-  const rolePatterns = {
-    senior: /(senior|sr\.?|lead|principal|staff)/i,
-    manager: /(manager|director|head|lead|principal)/i,
-    engineer: /(engineer|developer|dev)/i
-  };
-  
-  const roleMatches = Object.keys(rolePatterns).find(level => rolePatterns[level as keyof typeof rolePatterns].test(cleanText));
-  const role_level = roleMatches || 'Mid';
-  
-  const roleKeywords = ['fullstack', 'full-stack', 'frontend', 'backend', 'mobile', 'devops', 'data', 'ml', 'ai'];
-  const primary_role = roleKeywords.find(role => cleanText.includes(role)) || 'Software Developer';
-
-  // 🎯 Skills - Comprehensive lists with better matching
-  const skillPatterns: Record<string, RegExp> = {
-    programming_languages: /\b(typescript?|javascript|js|python|java|go|rust|c\+\+?|c#|php|ruby|swift|kotlin|scala|dart)\b/gi,
-    frameworks_and_libraries: /\b(react|next\.?js?|vue|angular|svelte|django|flask|fastapi|spring|laravel|rails|tensorflow?|pytorch|numpy|pandas|nuxt)\b/gi,
-    cloud_and_infra: /\b(aws?|amazon|azure|gcp|google cloud|docker|kubernetes?|k8s|terraform|jenkins|circleci|github actions|gitlab ci)\b/gi,
-    databases: /\b(postgresql?|postgres?|mysql|mariadb|mongodb|redis|dynamodb|firebase|supabase|prisma)\b/gi,
-    dev_tools: /\b(git|github|gitlab|bitbucket|webpack|vite|npm|yarn|docker|kubectl|vercel|netlify|railway)\b/gi
-  };
-
-  const skills: Record<string, string[]> = {};
-  Object.entries(skillPatterns).forEach(([key, pattern]) => {
-    let matches = Array.from(cleanText.matchAll(pattern)).map((m: RegExpMatchArray) => 
-      m[0].toLowerCase().replace(/\./g, '')
-    );
-    // Clean and deduplicate
-    matches = [...new Set(matches)]
-      .filter(skill => skill.length > 1)
-      .slice(0, 15);
-    skills[key] = matches;
-  });
-
-  // 🎯 Summary - Better extraction
-  const summaryLines = lines.slice(3, 15).join(' ').slice(0, 600);
-  const summaryKeywords = ['summary', 'profile', 'overview', 'about'];
-  const summaryStart = lines.findIndex(line => 
-    summaryKeywords.some(kw => line.toLowerCase().includes(kw))
-  );
-  const summary = summaryStart > 0 
-    ? lines.slice(summaryStart + 1, summaryStart + 8).join(' ').slice(0, 500)
-    : summaryLines;
-
-  // 🎯 Experience Parsing - Look for common patterns
-  const experience: any[] = [];
-  const expKeywords = ['experience', 'work', 'employment', 'professional'];
-  const expSectionStart = lines.findIndex(line => 
-    expKeywords.some(kw => line.toLowerCase().includes(kw))
-  );
-
-  if (expSectionStart > 0) {
-    const expLines = lines.slice(expSectionStart + 1, expSectionStart + 20);
-    // Look for job title/company patterns
-    expLines.slice(0, 5).forEach(line => {
-      const titleMatch = line.match(/^[A-Z][A-Za-z\s,]+(?=\s*(?:at|;|–|-|@))/);
-      const companyMatch = line.match(/(?:at|@|–|-)\s*([A-Z][A-Za-z\s&.,]+(?:Inc|Ltd|Corp)?)/);
-      
-      if (titleMatch || companyMatch) {
-        experience.push({
-          job_title: titleMatch?.[0]?.trim() || 'Software Engineer',
-          company: companyMatch?.[1]?.trim() || 'Company',
-          start_date: '2022',
-          end_date: 'Present',
-          responsibilities: ['Key responsibilities extracted'],
-          job_title_confidence: 0.85,
-          company_confidence: 0.8
-        });
-      }
-    });
-  }
-
-  if (experience.length === 0) {
-    experience.push({
-      job_title: 'Software Engineer',
-      company: primary_role.includes('Engineer') ? 'Tech Company' : 'Company',
-      start_date: '2023',
-      end_date: 'Present',
-      responsibilities: ['Dynamic role detection'],
-      job_title_confidence: 0.7,
-      company_confidence: 0.6
-    });
-  }
-
-  // 🎯 Education Parsing
-  const education: any[] = [];
-  const eduKeywords = ['education', 'university', 'college', 'degree', 'b\.s\.', 'b.s', 'm\.s\.', 'm.s', 'bachelor', 'master'];
-  const eduSectionStart = lines.findIndex(line => 
-    eduKeywords.some(kw => line.toLowerCase().includes(kw))
-  );
-
-  if (eduSectionStart > 0) {
-    const eduLines = lines.slice(Math.max(0, eduSectionStart - 5), eduSectionStart + 10);
-    eduLines.slice(0, 3).forEach(line => {
-      const degreeMatch = line.match(/(b\.?s\.?|bachelor|master|m\.?s\.?|msc|phd)[^\w]*([a-z\s]+)/i);
-      const instMatch = line.match(/([A-Z][a-zA-Z\s&.,]+(?:University|College|Institute))/);
-      
-      if (degreeMatch || instMatch) {
-        education.push({
-          degree: degreeMatch ? `${degreeMatch[1]} ${degreeMatch[2]}`.trim() : 'B.S. Computer Science',
-          institution: instMatch?.[1] || 'University',
-          year: line.match(/\d{4}/)?.[0] || '2023',
-          degree_confidence: 0.9,
-          institution_confidence: 0.85
-        });
-      }
-    });
-  }
-
-  if (education.length === 0) {
-    education.push({
-      degree: 'B.S. Computer Science',
-      institution: 'University',
-      year: '2023',
-      degree_confidence: 0.85,
-      institution_confidence: 0.8
-    });
-  }
-
-  // 🎯 URLs
-  const githubRegex = /github\.com[\/a-zA-Z0-9_-]+/i;
-  const github = cleanText.match(githubRegex)?.[0] ? `https://${cleanText.match(githubRegex)?.[0]}` : '';
-  
-  const portfolioRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?!.*github\.com)/i;
-  const portfolio = Array.from(cleanText.matchAll(portfolioRegex)).map(m => m[0])[0] || '';
-
-  return {
-    name: name.trim(),
-    email,
-    phone,
-    location,
-    role_level,
-    primary_role,
-    years_of_experience_total: totalYears || null,
-    years_of_experience_in_tech: techYears || null,
-    github,
-    portfolio,
-    summary: summary.trim() || '',
-    ...skills,
-    experience,
-    education,
-    // Confidence scores based on match quality
-    name_confidence: name ? 0.92 : 0.6,
-    email_confidence: email ? 0.98 : 0.3,
-    phone_confidence: phone ? 0.88 : 0.4,
-    location_confidence: location ? 0.82 : 0.5,
-    summary_confidence: summary ? 0.85 : 0.6,
-    raw: text.slice(0, 1500) + (text.length > 1500 ? '...' : '')
-  };
-}
+// ---------- Page Component ----------
 
 export default function Page() {
   const [file, setFile] = useState<File | null>(null);
@@ -535,22 +392,34 @@ export default function Page() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || !files[0]) return;
+
     const selectedFile = files[0];
+
     if (selectedFile.type !== "application/pdf") {
       setError("Please select a valid PDF file.");
+      setFile(null);
       return;
     }
+
     if (selectedFile.size > MAX_SIZE_MB * 1024 * 1024) {
       setError(`File too large. Max size is ${MAX_SIZE_MB} MB.`);
+      setFile(null);
       return;
     }
+
     setFile(selectedFile);
     setError(null);
   };
 
-const handleUpload = async () => {
+  const handleUpload = async () => {
   if (!file) {
     setError("Please select a file first.");
+    return;
+  }
+
+  if (!API_URL) {
+    console.error("Missing NEXT_PUBLIC_API_URL");
+    setError("API_URL is not configured. Please contact support.");
     return;
   }
 
@@ -560,38 +429,43 @@ const handleUpload = async () => {
   setEditedData(null);
 
   try {
-    const arrayBuffer = await file.arrayBuffer();
-    const uint8 = new Uint8Array(arrayBuffer);
-    
-    // ✅ EXTRACT TEXT FROM PDF BYTES - Works 90% of cases
-    let text = '';
-    for (let i = 0; i < uint8.length; i++) {
-      const char = uint8[i];
-      if (char >= 32 && char <= 126) { // Printable ASCII
-        text += String.fromCharCode(char);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API_URL.replace(/\/$/, "")}/parse`, {
+      method: "POST",
+      // keep API key header only if you actually use it
+      headers: {
+        ...(API_KEY ? { "x-api-key": API_KEY } : {}),
+      },
+      body: formData,
+    });
+
+    if (!res.ok) {
+      // try to read JSON error first
+      let message = `Backend error (${res.status})`;
+      try {
+        const maybeJson = await res.json();
+        if (maybeJson?.error) {
+          message += `: ${maybeJson.error}`;
+          throw new Error(message);
+        }
+      } catch {
+        // fallback to text
+        const text = await res.text();
+        if (text) {
+          message += `: ${text.slice(0, 200)}`;
+        }
+        throw new Error(message);
       }
     }
-    
-    // Clean up extracted text
-    text = text
-      .replace(/[^\w\s@.\-,+()\/\\]/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 10000); // Limit size
-    
-    console.log('✅ Extracted text preview:', text.slice(0, 300));
-    
-    if (text.length < 50) {
-      throw new Error('No readable text found. Use text-based PDFs (not scanned images)');
-    }
-    
-    const parsedData = parseResumeText(text);
+
+    const parsedData = await res.json();
     setResult(parsedData);
     setEditedData(parsedData);
-    
   } catch (e: any) {
-    console.error('❌ Error:', e);
-    setError(`Parse failed: ${e.message}`);
+    console.error("❌ Upload/parse error:", e);
+    setError(e?.message || "Parse failed. Please try again.");
   } finally {
     setLoading(false);
   }
@@ -602,26 +476,28 @@ const handleUpload = async () => {
     setEditedData((prev: any) => {
       if (!prev) return prev;
       const newData = JSON.parse(JSON.stringify(prev));
-      const keys = path.split('.');
+      const keys = path.split(".");
       let current: any = newData;
-      
+
       for (let i = 0; i < keys.length - 1; i++) {
         const key = keys[i];
-        if (key.includes('[')) {
+        if (key.includes("[")) {
           const match = key.match(/(\w+)\[(\d+)\]/);
           if (match) {
             const [, arrayKey, index] = match;
             current[arrayKey] = current[arrayKey] || [];
-            current = current[arrayKey][parseInt(index)] || (current[arrayKey][parseInt(index)] = {});
+            current =
+              current[arrayKey][parseInt(index)] ||
+              (current[arrayKey][parseInt(index)] = {});
           }
         } else {
           current[key] = current[key] || {};
           current = current[key];
         }
       }
-      
+
       const finalKey = keys[keys.length - 1];
-      if (finalKey.includes('[')) {
+      if (finalKey.includes("[")) {
         const match = finalKey.match(/(\w+)\[(\d+)\]/);
         if (match) {
           const [, arrayKey, index] = match;
@@ -631,7 +507,7 @@ const handleUpload = async () => {
       } else {
         current[finalKey] = value;
       }
-      
+
       return newData;
     });
   };
@@ -676,7 +552,8 @@ const handleUpload = async () => {
                 Resume Upload & Parser
               </p>
               <p className="mt-1 text-sm text-gray-600">
-                Upload PDF resumes for instant structured data extraction with confidence scores
+                Upload PDF resumes for instant structured data extraction with
+                confidence scores
               </p>
             </div>
 
@@ -768,12 +645,16 @@ const handleUpload = async () => {
                         <span className="absolute inset-0 flex items-center justify-center">
                           <span className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         </span>
-                        <span className="relative opacity-75">Analyzing Resume...</span>
+                        <span className="relative opacity-75">
+                          Sending to parser...
+                        </span>
                       </>
                     ) : (
                       <>
                         <span>🔥 Parse Resume</span>
-                        <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors">Instant</span>
+                        <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors">
+                          via API
+                        </span>
                       </>
                     )}
                   </button>
@@ -781,7 +662,7 @@ const handleUpload = async () => {
                   {loading && (
                     <div className="text-center py-4">
                       <p className="text-sm text-indigo-600 font-medium">
-                        Processing with advanced parsing algorithms...
+                        Talking to your backend parser...
                       </p>
                     </div>
                   )}
@@ -805,7 +686,10 @@ const handleUpload = async () => {
                     </button>
                   </div>
 
-                  <ResumeDisplay data={currentData} onFieldUpdate={handleFieldUpdate} />
+                  <ResumeDisplay
+                    data={currentData}
+                    onFieldUpdate={handleFieldUpdate}
+                  />
                 </>
               )}
             </div>
