@@ -420,34 +420,31 @@ export default function Page() {
   setEditedData(null);
 
   try {
-    const formData = new FormData();
-    formData.append("file", file);
+  if (!file) {
+    throw new Error("No file selected");
+  }
 
-    const res = await fetch(`${API_URL.replace(/\/$/, "")}/parse`, {
-      method: "POST",
-      headers: {
-        ...(API_KEY ? { "x-api-key": API_KEY } : {}),
-      },
-      body: formData,
-    });
+  const formData = new FormData();
+  formData.append("file", file);
 
-    if (!res.ok) {
-      // Read body ONCE depending on content type
-      const contentType = res.headers.get("content-type") || "";
-      let message = `Backend error (${res.status})`;
+  const url = `${API_URL.replace(/\/$/, "")}/parse`;
 
-      if (contentType.includes("application/json")) {
-        const errJson: any = await res.json().catch(() => null);
-        if (errJson && typeof errJson.error === "string") {
-          message += `: ${errJson.error}`;
-        }
-      } else {
-        const text = await res.text().catch(() => "");
-        if (text) message += `: ${text.slice(0, 200)}`;
-      }
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData, // Browser auto-sets correct multipart headers
+  });
 
-      throw new Error(message);
-    }
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Backend error (${res.status}): ${text}`);
+  }
+
+  const result = await res.json();
+  setResult(result); // or your existing state handler
+} catch (err: any) {
+  console.error("Upload/parse error:", err);
+  setError(err.message || "Unknown upload error");
+}
 
     // Success: read JSON once
     const parsedData = await res.json();
