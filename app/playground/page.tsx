@@ -424,9 +424,6 @@ export default function Page() {
     setEditedData(null);
 
   try {
-  setLoading(true);
-  setError(null);
-
   const formData = new FormData();
   formData.append("file", file);
 
@@ -447,8 +444,19 @@ export default function Page() {
   });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Backend error ${res.status}: ${text}`);
+    const contentType = res.headers.get("content-type") || "";
+    let message = `Backend error (${res.status})`;
+
+    if (contentType.includes("application/json")) {
+      const errJson = await res.json().catch(() => null);
+      if (errJson?.detail) message += `: ${errJson.detail}`;
+      else if (errJson?.error) message += `: ${errJson.error}`;
+    } else {
+      const text = await res.text().catch(() => "");
+      if (text) message += `: ${text.slice(0, 200)}`;
+    }
+
+    throw new Error(message);
   }
 
   const parsedData = await res.json();
@@ -456,7 +464,15 @@ export default function Page() {
   setEditedData(parsedData);
 } catch (e: any) {
   console.error("❌ Upload/parse error:", e);
-  setError(e.message || "Parse failed");
+
+  const msg = e?.message || "Parse failed. Please try again.";
+
+  if (msg.includes("429")) {
+    setRateLimited(true);
+    setError("Too many requests. Please wait and try again.");
+  } else {
+    setError(msg);
+  }
 } finally {
   setLoading(false);
 }
