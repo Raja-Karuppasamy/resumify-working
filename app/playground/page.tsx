@@ -438,7 +438,7 @@ export default function Page() {
   const res = await fetch(url, {
     method: "POST",
     headers: {
-      "X-API-Key": apiKey || "test",
+    "X-API-Key": "test",
     },
     body: formData,
   });
