@@ -447,19 +447,8 @@ export default function Page() {
   });
 
   if (!res.ok) {
-    const contentType = res.headers.get("content-type") || "";
-    let message = `Backend error (${res.status})`;
-
-    if (contentType.includes("application/json")) {
-      const errJson: any = await res.json().catch(() => null);
-      if (errJson?.detail) message += `: ${errJson.detail}`;
-      else if (errJson?.error) message += `: ${errJson.error}`;
-    } else {
-      const text = await res.text().catch(() => "");
-      if (text) message += `: ${text.slice(0, 200)}`;
-    }
-
-    throw new Error(message);
+    const text = await res.text();
+    throw new Error(`Backend error ${res.status}: ${text}`);
   }
 
   const parsedData = await res.json();
@@ -467,16 +456,12 @@ export default function Page() {
 
   setResult(parsedData);
   setEditedData(parsedData);
-
 } catch (e: any) {
   console.error("❌ Upload/parse error:", e);
 
   const msg = e?.message || "Parse failed. Please try again.";
 
-  if (
-    msg.includes("429") ||
-    msg.toLowerCase().includes("too many requests")
-  ) {
+  if (msg.includes("429")) {
     setRateLimited(true);
     setError("Too many requests. Please wait a bit and try again.");
   } else {
@@ -485,6 +470,7 @@ export default function Page() {
 } finally {
   setLoading(false);
 }
+
 
   const handleFieldUpdate = (path: string, value: string) => {
     setEditedData((prev: any) => {
