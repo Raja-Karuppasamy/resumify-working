@@ -452,21 +452,11 @@ export default function Page() {
   }
 
   const parsedData = await res.json();
-  console.log("Parsed result:", parsedData);
-
   setResult(parsedData);
   setEditedData(parsedData);
 } catch (e: any) {
   console.error("❌ Upload/parse error:", e);
-
-  const msg = e?.message || "Parse failed. Please try again.";
-
-  if (msg.includes("429")) {
-    setRateLimited(true);
-    setError("Too many requests. Please wait a bit and try again.");
-  } else {
-    setError(msg);
-  }
+  setError(e.message || "Parse failed");
 } finally {
   setLoading(false);
 }
