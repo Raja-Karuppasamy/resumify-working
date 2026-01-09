@@ -476,7 +476,7 @@ export default function Page() {
 } finally {
   setLoading(false);
 }
-
+  };
 
   const handleFieldUpdate = (path: string, value: string) => {
     setEditedData((prev: any) => {
@@ -736,4 +736,4 @@ export default function Page() {
       </div>
     </div>
   );
-}}
+}
