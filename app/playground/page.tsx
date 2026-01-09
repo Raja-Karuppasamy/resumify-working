@@ -423,55 +423,68 @@ export default function Page() {
     setResult(null);
     setEditedData(null);
 
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
+  try {
+  setLoading(true);
+  setError(null);
 
-      const url = `${API_URL.replace(/\/$/, "")}/parse`;
-      console.log("Sending to backend:", url);
+  const formData = new FormData();
+  formData.append("file", file);
 
-      const res = await fetch(url, {
-        method: "POST",
-       body: formData,
-      });
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  if (!API_URL) {
+    throw new Error("NEXT_PUBLIC_API_URL is not defined");
+  }
 
-      if (!res.ok) {
-        const contentType = res.headers.get("content-type") || "";
-        let message = `Backend error (${res.status})`;
+  const url = `${API_URL.replace(/\/$/, "")}/parse`;
+  console.log("Sending to backend:", url);
 
-        if (contentType.includes("application/json")) {
-          const errJson: any = await res.json().catch(() => null);
-          if (errJson && typeof errJson.detail === "string") {
-            message += `: ${errJson.detail}`;
-          } else if (errJson && typeof errJson.error === "string") {
-            message += `: ${errJson.error}`;
-          }
-        } else {
-          const text = await res.text().catch(() => "");
-          if (text) message += `: ${text.slice(0, 200)}`;
-        }
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "X-API-Key": apiKey || "test",
+    },
+    body: formData,
+  });
 
-        throw new Error(message);
-      }
+  if (!res.ok) {
+    const contentType = res.headers.get("content-type") || "";
+    let message = `Backend error (${res.status})`;
 
-      const parsedData = await res.json();
-      setResult(parsedData);
-      setEditedData(parsedData);
-    } catch (e: any) {
-      console.error("❌ Upload/parse error:", e);
-
-      const msg = e?.message || "Parse failed. Please try again.";
-
-      if (msg.includes("429") || msg.toLowerCase().includes("too many requests")) {
-        setRateLimited(true);
-        setError("Too many requests. Please wait a bit and try again.");
-      } else {
-       setError(msg);
-      }
-    } finally {
-      setLoading(false);
+    if (contentType.includes("application/json")) {
+      const errJson: any = await res.json().catch(() => null);
+      if (errJson?.detail) message += `: ${errJson.detail}`;
+      else if (errJson?.error) message += `: ${errJson.error}`;
+    } else {
+      const text = await res.text().catch(() => "");
+      if (text) message += `: ${text.slice(0, 200)}`;
     }
-  };
+
+    throw new Error(message);
+  }
+
+  const parsedData = await res.json();
+  console.log("Parsed result:", parsedData);
+
+  setResult(parsedData);
+  setEditedData(parsedData);
+
+} catch (e: any) {
+  console.error("❌ Upload/parse error:", e);
+
+  const msg = e?.message || "Parse failed. Please try again.";
+
+  if (
+    msg.includes("429") ||
+    msg.toLowerCase().includes("too many requests")
+  ) {
+    setRateLimited(true);
+    setError("Too many requests. Please wait a bit and try again.");
+  } else {
+    setError(msg);
+  }
+} finally {
+  setLoading(false);
+}
 
   const handleFieldUpdate = (path: string, value: string) => {
     setEditedData((prev: any) => {
