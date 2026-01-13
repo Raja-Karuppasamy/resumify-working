@@ -280,8 +280,8 @@ function EditableField({
     </div>
   );
 }
+
 // ---------- Resume Display ----------
-// PASTE THIS AFTER Part 1
 
 function ResumeDisplay({
   data,
@@ -729,7 +729,6 @@ export default function Page() {
       const formData = new FormData();
       formData.append("file", file);
 
-      // CHANGED: Use /parse/ai endpoint for AI-powered parsing
       const url = `${API_URL.replace(/\/$/, "")}/parse/ai`;
       console.log("Uploading to:", url);
 
@@ -983,7 +982,6 @@ export default function Page() {
 
                   {loading && (
                     <div className="text-center py-4">
-                      <p className="text-sm text-indigo-600 font-medium"></p>
                       <p className="text-sm text-indigo-600 font-medium">
                         AI is analyzing your resume... This may take 10-30 seconds
                       </p>
@@ -1094,7 +1092,7 @@ export default function Page() {
         <footer className="mt-16 text-center text-sm text-gray-500">
           <p>
             Built with FastAPI, Claude AI & Next.js •{" "}
-            
+            <a
               href="https://github.com/yourusername/resume-parser"
               target="_blank"
               rel="noopener noreferrer"
