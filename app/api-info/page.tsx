@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import CTAHeader from "./components/CTAHeader";
+import AnonymousBanner from "./components/AnonymousBanner";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const MAX_SIZE_MB = 10;
@@ -693,8 +695,19 @@ export default function Page() {
   const [result, setResult] = useState<any>(null);
   const [editedData, setEditedData] = useState<any>(null);
   const [rateLimited, setRateLimited] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [remainingParses, setRemainingParses] = useState(5);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkAuth = async () => {
+      const apiKey = localStorage.getItem('apiKey');
+      setIsLoggedIn(!!apiKey);
+    };
+    checkAuth();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -825,284 +838,297 @@ export default function Page() {
   const currentData = editedData || result;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
-              R
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Resumify Resume Parser API
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                AI-powered parsing with quality scoring & ATS analysis
-              </p>
-            </div>
-          </div>
-          <span className="hidden md:inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 font-medium shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            Live Parsing
-          </span>
-        </header>
-
-        {rateLimited && (
-          <div className="mb-4 rounded-xl border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
-            <div className="font-semibold">Rate limit reached</div>
-            <div>
-              You've hit the free usage limit. Please wait a minute and try again.
-            </div>
-          </div>
+    <>
+      <CTAHeader />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+        {!isLoggedIn && (
+          <AnonymousBanner 
+            remainingParses={remainingParses} 
+            maxParses={5} 
+          />
         )}
+      </div>
 
-        <main className="max-w-4xl mx-auto">
-          <section className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-indigo-50/50">
-            <div className="px-8 pt-8 pb-6 border-b border-indigo-100">
-              <p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
-                AI-Powered Resume Parser
-              </p>
-              <p className="mt-1 text-sm text-gray-600">
-                Upload PDF resumes for 95% accurate parsing with quality scoring and ATS compatibility analysis
-              </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          {/* Header */}
+          <header className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
+                R
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                  Resumify Resume Parser API
+                </h1>
+                <p className="text-sm text-gray-500 mt-1">
+                  AI-powered parsing with quality scoring & ATS analysis
+                </p>
+              </div>
             </div>
-            
-            <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 mx-8 mt-6">
-              🤖 <strong>AI-Powered</strong> — Using Claude AI for 95% accuracy vs 60% industry average
-            </div>
+            <span className="hidden md:inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 font-medium shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              Live Parsing
+            </span>
+          </header>
 
-            <div className="p-8 space-y-8">
-              {!result ? (
-                <>
-                  {/* Upload Area */}
-                  <div className="space-y-4">
-                    <label className="block text-sm font-semibold text-gray-800 mb-3">
-                      Choose Resume File (PDF)
-                    </label>
-                    <div className="mt-2">
-                      <label
-                        htmlFor="resume-upload"
-                        className="flex flex-col items-center justify-center px-8 py-12 border-2 border-dashed rounded-2xl border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50/60 transition-all duration-200 cursor-pointer group"
-                      >
-                        <svg
-                          className="mx-auto h-12 w-12 text-indigo-400 group-hover:text-indigo-500 transition-colors"
-                          stroke="currentColor"
-                          fill="none"
-                          viewBox="0 0 48 48"
-                        >
-                          <path
-                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                            strokeWidth={2}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        <span className="mt-4 text-lg font-semibold text-gray-700 group-hover:text-indigo-700 transition-colors">
-                          Drop your resume or click to browse
-                        </span>
-                        <span className="mt-1 text-sm text-gray-500">
-                          PDF only • Maximum {MAX_SIZE_MB} MB
-                        </span>
+          {rateLimited && (
+            <div className="mb-4 rounded-xl border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
+              <div className="font-semibold">Rate limit reached</div>
+              <div>
+                You've hit the free usage limit. Please wait a minute and try again.
+              </div>
+            </div>
+          )}
+
+          <main className="max-w-4xl mx-auto">
+            <section className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-indigo-50/50">
+              <div className="px-8 pt-8 pb-6 border-b border-indigo-100">
+                <p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
+                  AI-Powered Resume Parser
+                </p>
+                <p className="mt-1 text-sm text-gray-600">
+                  Upload PDF resumes for 95% accurate parsing with quality scoring and ATS compatibility analysis
+                </p>
+              </div>
+              
+              <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 mx-8 mt-6">
+                🤖 <strong>AI-Powered</strong> — Using Claude AI for 95% accuracy vs 60% industry average
+              </div>
+
+              <div className="p-8 space-y-8">
+                {!result ? (
+                  <>
+                    {/* Upload Area */}
+                    <div className="space-y-4">
+                      <label className="block text-sm font-semibold text-gray-800 mb-3">
+                        Choose Resume File (PDF)
                       </label>
-                      <input
-                        id="resume-upload"
-                        type="file"
-                        accept="application/pdf"
-                        onChange={handleFileChange}
-                        className="hidden"
-                        disabled={loading}
-                        ref={fileInputRef}
-                      />
+                      <div className="mt-2">
+                        <label
+                          htmlFor="resume-upload"
+                          className="flex flex-col items-center justify-center px-8 py-12 border-2 border-dashed rounded-2xl border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50/60 transition-all duration-200 cursor-pointer group"
+                        >
+                          <svg
+                            className="mx-auto h-12 w-12 text-indigo-400 group-hover:text-indigo-500 transition-colors"
+                            stroke="currentColor"
+                            fill="none"
+                            viewBox="0 0 48 48"
+                          >
+                            <path
+                              d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                              strokeWidth={2}
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                          <span className="mt-4 text-lg font-semibold text-gray-700 group-hover:text-indigo-700 transition-colors">
+                            Drop your resume or click to browse
+                          </span>
+                          <span className="mt-1 text-sm text-gray-500">
+                            PDF only • Maximum {MAX_SIZE_MB} MB
+                          </span>
+                        </label>
+                        <input
+                          id="resume-upload"
+                          type="file"
+                          accept="application/pdf"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          disabled={loading}
+                          ref={fileInputRef}
+                        />
+                      </div>
+
+                      {file && (
+                        <div className="flex items-center justify-between px-6 py-4 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200">
+                          <div className="flex items-center gap-3">
+                            <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold shadow-lg">
+                              📄
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-none">
+                                {file.name}
+                              </p>
+                              <p className="text-sm text-indigo-600 font-medium">
+                                {formatBytes(file.size)}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setFile(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = "";
+                              }
+                            }}
+                            className="px-4 py-2 bg-white text-gray-600 rounded-lg hover:bg-gray-50 border font-medium transition-colors"
+                            disabled={loading}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      )}
                     </div>
 
-                    {file && (
-                      <div className="flex items-center justify-between px-6 py-4 rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200">
-                        <div className="flex items-center gap-3">
-                          <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold shadow-lg">
-                            📄
-                          </div>
-                          <div>
-                            <p className="font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-none">
-                              {file.name}
-                            </p>
-                            <p className="text-sm text-indigo-600 font-medium">
-                              {formatBytes(file.size)}
-                            </p>
-                          </div>
+                    {error && (
+                      <div className="p-4 rounded-xl bg-red-50 border-2 border-red-200">
+                        <div className="flex items-start gap-2">
+                          <span className="h-5 w-5 text-red-500 mt-0.5">⚠️</span>
+                          <p className="text-sm text-red-800">{error}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={handleUpload}
+                      disabled={loading || !file}
+                      className="w-full group relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 transform hover:-translate-y-0.5"
+                    >
+                      {loading ? (
+                        <>
+                          <span className="absolute inset-0 flex items-center justify-center">
+                            <span className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          </span>
+                          <span className="relative opacity-75">
+                            Analyzing with AI...
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span>🤖 Parse with AI</span>
+                          <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors">
+                            95% accuracy
+                          </span>
+                        </>
+                      )}
+                    </button>
+
+                    {loading && (
+                      <div className="text-center py-4">
+                        <p className="text-sm text-indigo-600 font-medium">
+                          AI is analyzing your resume... This may take 10-30 seconds
+                        </p>
+                        <div className="mt-3 flex justify-center gap-2">
+                          <div className="h-2 w-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <div className="h-2 w-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <div className="h-2 w-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* Results Display */}
+                    <div className="space-y-6">
+                      <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+                        <div>
+                          <h2 className="text-2xl font-bold text-gray-900">
+                            Parsed Resume Data
+                          </h2>
+                          <p className="text-sm text-gray-500 mt-1">
+                            Click any field to edit and correct the parsed information
+                          </p>
                         </div>
                         <button
-                          onClick={() => {
-                            setFile(null);
-                            if (fileInputRef.current) {
-                              fileInputRef.current.value = "";
-                            }
-                          }}
-                          className="px-4 py-2 bg-white text-gray-600 rounded-lg hover:bg-gray-50 border font-medium transition-colors"
-                          disabled={loading}
+                          onClick={resetForm}
+                          className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-700 hover:to-gray-800 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
                         >
-                          Remove
+                          ← Upload Another
                         </button>
                       </div>
-                    )}
-                  </div>
 
-                  {error && (
-                    <div className="p-4 rounded-xl bg-red-50 border-2 border-red-200">
-                      <div className="flex items-start gap-2">
-                        <span className="h-5 w-5 text-red-500 mt-0.5">⚠️</span>
-                        <p className="text-sm text-red-800">{error}</p>
+                      <ResumeDisplay
+                        data={currentData}
+                        onFieldUpdate={handleFieldUpdate}
+                      />
+
+                      {/* Export Options */}
+                      <div className="flex gap-3 pt-6 border-t border-gray-200">
+                        <button
+                          onClick={() => {
+                            const dataStr = JSON.stringify(editedData || result, null, 2);
+                            const blob = new Blob([dataStr], { type: "application/json" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = `resume-parsed-${Date.now()}.json`;
+                            a.click();
+                            URL.revokeObjectURL(url);
+                          }}
+                          className="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+                        >
+                          💾 Download JSON
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              JSON.stringify(editedData || result, null, 2)
+                            );
+                            alert("Copied to clipboard!");
+                          }}
+                          className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
+                        >
+                          📋 Copy to Clipboard
+                        </button>
                       </div>
                     </div>
-                  )}
-
-                  <button
-                    onClick={handleUpload}
-                    disabled={loading || !file}
-                    className="w-full group relative overflow-hidden bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none transition-all duration-200 transform hover:-translate-y-0.5"
-                  >
-                    {loading ? (
-                      <>
-                        <span className="absolute inset-0 flex items-center justify-center">
-                          <span className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        </span>
-                        <span className="relative opacity-75">
-                          Analyzing with AI...
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span>🤖 Parse with AI</span>
-                        <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors">
-                          95% accuracy
-                        </span>
-                      </>
-                    )}
-                  </button>
-
-                  {loading && (
-                    <div className="text-center py-4">
-                      <p className="text-sm text-indigo-600 font-medium">
-                        AI is analyzing your resume... This may take 10-30 seconds
-                      </p>
-                      <div className="mt-3 flex justify-center gap-2">
-                        <div className="h-2 w-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <div className="h-2 w-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <div className="h-2 w-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  {/* Results Display */}
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between pb-4 border-b border-gray-200">
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          Parsed Resume Data
-                        </h2>
-                        <p className="text-sm text-gray-500 mt-1">
-                          Click any field to edit and correct the parsed information
-                        </p>
-                      </div>
-                      <button
-                        onClick={resetForm}
-                        className="px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl hover:from-gray-700 hover:to-gray-800 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-                      >
-                        ← Upload Another
-                      </button>
-                    </div>
-
-                    <ResumeDisplay
-                      data={currentData}
-                      onFieldUpdate={handleFieldUpdate}
-                    />
-
-                    {/* Export Options */}
-                    <div className="flex gap-3 pt-6 border-t border-gray-200">
-                      <button
-                        onClick={() => {
-                          const dataStr = JSON.stringify(editedData || result, null, 2);
-                          const blob = new Blob([dataStr], { type: "application/json" });
-                          const url = URL.createObjectURL(blob);
-                          const a = document.createElement("a");
-                          a.href = url;
-                          a.download = `resume-parsed-${Date.now()}.json`;
-                          a.click();
-                          URL.revokeObjectURL(url);
-                        }}
-                        className="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-                      >
-                        💾 Download JSON
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(
-                            JSON.stringify(editedData || result, null, 2)
-                          );
-                          alert("Copied to clipboard!");
-                        }}
-                        className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 font-semibold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5"
-                      >
-                        📋 Copy to Clipboard
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          </section>
-
-          {/* Features Section */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl mb-4">
-                🤖
+                  </>
+                )}
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">AI-Powered</h3>
-              <p className="text-sm text-gray-600">
-                Claude AI achieves 95% accuracy vs 60% industry average for resume parsing
-              </p>
-            </div>
+            </section>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">
-                📊
+            {/* Features Section */}
+            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl mb-4">
+                  🤖
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">AI-Powered</h3>
+                <p className="text-sm text-gray-600">
+                  Claude AI achieves 95% accuracy vs 60% industry average for resume parsing
+                </p>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">Quality Scoring</h3>
-              <p className="text-sm text-gray-600">
-                Get detailed quality analysis with actionable recommendations to improve your resume
-              </p>
-            </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">
-                🎯
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">
+                  📊
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">Quality Scoring</h3>
+                <p className="text-sm text-gray-600">
+                  Get detailed quality analysis with actionable recommendations to improve your resume
+                </p>
               </div>
-              <h3 className="font-bold text-gray-900 mb-2">ATS Compatible</h3>
-              <p className="text-sm text-gray-600">
-                Check if your resume will pass Applicant Tracking Systems with detailed compatibility analysis
-              </p>
-            </div>
-          </div>
-        </main>
 
-        {/* Footer */}
-        <footer className="mt-16 text-center text-sm text-gray-500">
-          <p>
-            Built with FastAPI, Claude AI & Next.js •{" "}
-            <a
-              href="https://github.com/yourusername/resume-parser"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
-            >
-              View on GitHub
-            </a>
-          </p>
-        </footer>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">
+                  🎯
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">ATS Compatible</h3>
+                <p className="text-sm text-gray-600">
+                  Check if your resume will pass Applicant Tracking Systems with detailed compatibility analysis
+                </p>
+              </div>
+            </div>
+          </main>
+
+          {/* Footer */}
+          <footer className="mt-16 text-center text-sm text-gray-500">
+            <p>
+              Built with FastAPI, Claude AI & Next.js •{" "}
+              
+                href="https://github.com/yourusername/resume-parser"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:text-indigo-800 font-medium"
+              >
+                View on GitHub
+              </a>
+            </p>
+          </footer>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
