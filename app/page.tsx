@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import CTAHeader from "./components/CTAHeader";
 import AnonymousBanner from "./components/AnonymousBanner";
+import AuthModal from "./components/AuthModal";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const MAX_SIZE_MB = 10;
 
@@ -219,6 +220,7 @@ function EditableField({
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleSave = () => {
     onCorrect(editValue);
@@ -696,7 +698,7 @@ export default function Page() {
   const [rateLimited, setRateLimited] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [remainingParses, setRemainingParses] = useState(5);
-
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
  useEffect(() => {
@@ -871,12 +873,13 @@ export default function Page() {
     
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       {!isLoggedIn && (
-        <AnonymousBanner
-          key={remainingParses}
-          remainingParses={remainingParses} 
-          maxParses={5} 
-          />
-      )}
+     <AnonymousBanner
+       key={remainingParses}
+       remainingParses={remainingParses} 
+       maxParses={5}
+       onSignUpClick={() => setShowAuthModal(true)}
+     />
+   )}
     </div>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -1157,6 +1160,9 @@ export default function Page() {
         </footer>
       </div>
    </div>
+
+  <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+
   </>
   );
 }
