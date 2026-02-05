@@ -43,21 +43,13 @@ export default function CTAHeader() {
               </Link>
               
               {user ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <button 
-                    onClick={handleSignOut}
-                    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
+  <button 
+    onClick={handleSignOut}
+    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+  >
+    Sign Out
+  </button>
+) : (
                 <button 
                   onClick={() => setShowAuthModal(true)}
                   className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
