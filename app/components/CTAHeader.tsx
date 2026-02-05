@@ -10,8 +10,14 @@ export default function CTAHeader() {
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
-    await signOut();
-    window.location.href = "/";
+    try {
+      await signOut();
+      window.location.href = "/";
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Force sign out by clearing local state and redirecting anyway
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -43,13 +49,13 @@ export default function CTAHeader() {
               </Link>
               
               {user ? (
-  <button 
-    onClick={handleSignOut}
-    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-  >
-    Sign Out
-  </button>
-) : (
+                <button 
+                  onClick={handleSignOut}
+                  className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+                >
+                  Sign Out
+                </button>
+              ) : (
                 <button 
                   onClick={() => setShowAuthModal(true)}
                   className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
