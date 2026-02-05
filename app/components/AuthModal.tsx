@@ -28,18 +28,20 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     try {
       if (mode === "signup") {
-        await signUp(email, password);
-        setSuccess("Account created! Please check your email to verify.");
-        setEmail("");
-        setPassword("");
-      } else {
-        await signIn(email, password);
-        setSuccess("Signed in successfully!");
-        setTimeout(() => {
-          onClose();
-          window.location.href = "/dashboard";
-        }, 1000);
-      }
+  await signUp(email, password);
+  setSuccess("Account created successfully!");
+  setTimeout(() => {
+    onClose();
+    window.location.reload(); // Refresh to show logged-in state
+  }, 1000);
+} else {
+  await signIn(email, password);
+  setSuccess("Signed in successfully!");
+  setTimeout(() => {
+    onClose();
+    window.location.reload(); // Refresh to show logged-in state
+  }, 1000);
+}
     } catch (err: any) {
       setError(err.message || "Something went wrong");
     } finally {
