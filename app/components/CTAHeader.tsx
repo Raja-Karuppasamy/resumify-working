@@ -11,21 +11,24 @@ export default function CTAHeader() {
   const { user } = useAuth();
 
   const handleSignOut = useCallback(async () => {
-    console.log('Sign out button clicked');
+  try {
+    // Sign out from Supabase
+    await supabase.auth.signOut();
     
-    // Don't wait for Supabase - just clear localStorage and redirect
-    localStorage.removeItem('sb-msjhrsnyuftyaykxpmux-auth-token');
+    // Force clear all Supabase storage
+    localStorage.clear();
+    sessionStorage.clear();
     
-    // Fire and forget the Supabase signOut (don't await)
-    supabase.auth.signOut().then(() => {
-      console.log('Supabase signOut completed');
-    }).catch((err) => {
-      console.error('Supabase signOut error:', err);
-    });
-    
-    // Redirect immediately
+    // Redirect to home
     window.location.href = "/";
-  }, []);
+  } catch (error) {
+    console.error('Sign out error:', error);
+    // Even if Supabase fails, force logout
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "/";
+  }
+}, []);
 
   return (
     <>
