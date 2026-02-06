@@ -10,6 +10,7 @@ export default function CTAHeader() {
   const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
+    console.log('Sign out button clicked'); // Debug log
     try {
       await signOut();
       window.location.href = "/";
