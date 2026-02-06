@@ -17,15 +17,13 @@ export default function CTAHeader() {
   localStorage.clear();
   sessionStorage.clear();
   
-  // Fire and forget the Supabase signOut (don't await)
-  supabase.auth.signOut().then(() => {
-    console.log('Supabase signOut completed');
-  }).catch((err) => {
+  // Fire and forget the Supabase signOut
+  supabase.auth.signOut().catch((err) => {
     console.error('Supabase signOut error:', err);
   });
   
-  // Redirect immediately
-  window.location.href = "/";
+  // Force full reload (not just href change)
+  window.location.reload();
 }, []);
 
   return (
