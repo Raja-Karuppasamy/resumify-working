@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import AuthModal from "./AuthModal";
 import Link from "next/link";
@@ -9,7 +9,7 @@ export default function CTAHeader() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, signOut } = useAuth();
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     console.log('Sign out button clicked'); // Debug log
     try {
       await signOut();
@@ -19,7 +19,7 @@ export default function CTAHeader() {
       // Force sign out by clearing local state and redirecting anyway
       window.location.href = "/";
     }
-  };
+  }, [signOut]);
 
   return (
     <>
@@ -51,6 +51,7 @@ export default function CTAHeader() {
               
               {user ? (
                 <button 
+                  key={user.id}
                   onClick={handleSignOut}
                   className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
                 >
