@@ -2,24 +2,33 @@
 
 import { useState, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/lib/supabase";
 import AuthModal from "./AuthModal";
 import Link from "next/link";
 
 export default function CTAHeader() {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   const handleSignOut = useCallback(async () => {
-    console.log('Sign out button clicked'); // Debug log
+    console.log('Sign out button clicked');
     try {
-      await signOut();
+      // Call Supabase directly instead of through context
+      const { error } = await supabase.auth.signOut();
+      console.log('Supabase signOut response:', error);
+      
+      if (error) {
+        console.error('Sign out error:', error);
+      }
+      
+      // Always redirect regardless of error
       window.location.href = "/";
     } catch (error) {
-      console.error('Sign out error:', error);
-      // Force sign out by clearing local state and redirecting anyway
+      console.error('Sign out exception:', error);
+      // Force redirect anyway
       window.location.href = "/";
     }
-  }, [signOut]);
+  }, []);
 
   return (
     <>
