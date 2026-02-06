@@ -121,8 +121,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    console.log('AuthContext: signOut called');
+    try {
+      const { error } = await supabase.auth.signOut()
+      console.log('AuthContext: signOut response', { error });
+      if (error) {
+        console.error('AuthContext: signOut error', error);
+        throw error;
+      }
+      console.log('AuthContext: signOut successful');
+    } catch (err) {
+      console.error('AuthContext: signOut exception', err);
+      throw err;
+    }
   }
 
   const signInWithGoogle = async () => {
