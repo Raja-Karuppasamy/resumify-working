@@ -20,34 +20,33 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  setLoading(true);
 
-    try {
-      if (mode === "signup") {
-  await signUp(email, password);
-  setSuccess("Account created successfully!");
-  setTimeout(() => {
-    onClose();
-    window.location.reload(); // Refresh to show logged-in state
-  }, 1000);
-} else {
-  await signIn(email, password);
-  setSuccess("Signed in successfully!");
-  setTimeout(() => {
-    onClose();
-    window.location.reload(); // Refresh to show logged-in state
-  }, 1000);
-}
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+  try {
+    if (mode === "signup") {
+      await signUp(email, password);
+      setSuccess("Account created successfully!");
+      // Wait for Supabase to persist session
+      await new Promise(resolve => setTimeout(resolve, 500));
+      onClose();
+      window.location.reload();
+    } else {
+      await signIn(email, password);
+      setSuccess("Signed in successfully!");
+      // Wait for Supabase to persist session
+      await new Promise(resolve => setTimeout(resolve, 500));
+      onClose();
+      window.location.reload();
     }
-  };
+  } catch (err: any) {
+    setError(err.message || "Something went wrong");
+    setLoading(false);
+  }
+};
 
   const handleGoogleSignIn = async () => {
     setError("");
