@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function CTAHeader() {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user } = useAuth();
+  const { user , profile } = useAuth();
 
   const handleSignOut = useCallback(async () => {
   console.log('Sign out button clicked');
@@ -55,21 +55,27 @@ export default function CTAHeader() {
               </Link>
               
               {user ? (
-                <button 
-                  key={user.id}
-                  onClick={handleSignOut}
-                  className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <button 
-                  onClick={() => setShowAuthModal(true)}
-                  className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
-                >
-                  Get API Key
-                </button>
-              )}
+  <div className="flex items-center gap-4">
+    {profile && (
+      <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700">
+        {profile.subscription_tier}
+      </span>
+    )}
+    <button 
+      onClick={handleSignOut}
+      className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+    >
+      Sign Out
+    </button>
+  </div>
+) : (
+  <button 
+    onClick={() => setShowAuthModal(true)}
+    className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+  >
+    Get API Key
+  </button>
+)}
             </div>
           </div>
         </div>
