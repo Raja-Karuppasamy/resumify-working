@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import CTAHeader from "./components/CTAHeader";
 import AnonymousBanner from "./components/AnonymousBanner";
+import { useAuth } from "@/lib/auth-context";
 import AuthModal from "./components/AuthModal";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const MAX_SIZE_MB = 10;
@@ -221,6 +222,7 @@ function EditableField({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  
 
   const handleSave = () => {
     onCorrect(editValue);
@@ -699,6 +701,7 @@ export default function Page() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [remainingParses, setRemainingParses] = useState(5);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
  useEffect(() => {
@@ -872,7 +875,7 @@ export default function Page() {
     <CTAHeader />
     
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
-      {!isLoggedIn && (
+      {!user && (
      <AnonymousBanner
        key={remainingParses}
        remainingParses={remainingParses} 
