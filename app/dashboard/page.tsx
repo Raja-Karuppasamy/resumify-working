@@ -21,7 +21,7 @@ export default function DashboardPage() {
     // Generate or fetch API key (for now, using user ID as placeholder)
     if (user) {
       // In production, this should be a proper API key from your backend
-      setApiKey(`rfy_${user.id.slice(0, 20)}`);
+    setApiKey(`rfy_${user.id.slice(0, 20)}`);
     }
   }, [user]);
 
