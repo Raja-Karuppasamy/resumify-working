@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { PLANS } from '@/lib/stripe'
 import Link from 'next/link'
@@ -12,9 +12,20 @@ const CheckIcon = () => (
 )
 
 export default function PricingPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, refreshProfile } = useAuth()
   const [loading, setLoading] = useState(false)
   const [annual, setAnnual] = useState(false)
+  
+// Add this useEffect to refresh profile on successful payment
+useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('success') === 'true') {
+      // Refresh profile to get updated subscription
+      refreshProfile()
+      // Clean up URL
+      window.history.replaceState({}, '', '/pricing')
+    }
+  }, [refreshProfile])
 
   const handleUpgrade = async (priceId: string) => {
     if (!user) {
