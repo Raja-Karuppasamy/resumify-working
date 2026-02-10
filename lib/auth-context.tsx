@@ -144,7 +144,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     })
     if (error) throw error
   }
-
+  const refreshProfile = async () => {
+  if (user) {
+    await fetchProfile(user.id)
+  }
+}
   const value = {
     user,
     profile,
