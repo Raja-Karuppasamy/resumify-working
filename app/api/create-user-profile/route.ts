@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { generateApiKey } from '@/lib/generate-api-key'
 
 // Use service role to bypass RLS
 const supabase = createClient(
@@ -10,20 +11,24 @@ const supabase = createClient(
 export async function POST(req: NextRequest) {
   try {
     const { userId, email } = await req.json()
-
+    
+    // Generate a secure API key
+    const apiKey = generateApiKey()
+    
     const { error } = await supabase.from('users').insert({
       id: userId,
       email: email,
       subscription_tier: 'free',
       usage_count: 0,
       usage_reset_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      api_key: apiKey,
     })
-
+    
     if (error) {
       console.error('Error creating user profile:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
-
+    
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error:', error)

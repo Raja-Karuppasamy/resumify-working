@@ -18,12 +18,11 @@ export default function DashboardPage() {
   }, [user, loading, router]);
 
   useEffect(() => {
-    // Generate or fetch API key (for now, using user ID as placeholder)
-    if (user) {
-      // In production, this should be a proper API key from your backend
-    setApiKey(`rfy_${user.id.slice(0, 20)}`);
-    }
-  }, [user]);
+  // Use the API key from profile
+  if (profile?.api_key) {
+    setApiKey(profile.api_key);
+  }
+}, [profile]);
 
   const handleCopy = () => {
     if (apiKey) {
