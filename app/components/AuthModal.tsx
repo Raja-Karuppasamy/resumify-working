@@ -38,7 +38,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       await signIn(email, password);
       setSuccess("Signed in successfully!");
       // Wait for Supabase to persist session
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       onClose();
       window.location.reload();
     }
