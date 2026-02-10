@@ -10,6 +10,7 @@ type UserProfile = {
   subscription_tier: 'free' | 'pro' | 'business'
   usage_count: number
   usage_reset_date: string
+  api_key?: string
 }
 
 type AuthContextType = {
