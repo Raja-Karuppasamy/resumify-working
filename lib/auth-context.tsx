@@ -32,29 +32,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single()
-
-      if (error) {
-        console.error('Error fetching profile:', error)
-        return
-      }
-      
-      setProfile(data)
-    } catch (error) {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
+    
+    if (error) {
       console.error('Error fetching profile:', error)
+      setLoading(false) // ADD THIS
+      return
     }
+    
+    setProfile(data)
+    setLoading(false) // ADD THIS
+  } catch (error) {
+    console.error('Error fetching profile:', error)
+    setLoading(false) // ADD THIS
   }
-
-  const refreshProfile = async () => {
-    if (user) {
-      await fetchProfile(user.id)
-    }
-  }
+}
 
   useEffect(() => {
     // Get initial session
