@@ -45,10 +45,27 @@ export default function DashboardPage() {
     );
   }
 
-  if (!user || !profile) {
-    return null;
-  }
+  if (!user) {
+  console.log('Dashboard: No user, redirecting...')
+  return null;
+}
 
+if (!profile) {
+  console.log('Dashboard: No profile yet, showing message')
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-gray-600">Loading your profile...</p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded"
+        >
+          Retry
+        </button>
+      </div>
+    </div>
+  )
+}
   const usagePercentage = profile.subscription_tier === "free" 
     ? (profile.usage_count / 20) * 100
     : profile.subscription_tier === "pro"
