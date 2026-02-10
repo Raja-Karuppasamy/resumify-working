@@ -54,34 +54,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        fetchProfile(session.user.id).finally(() => setLoading(false))
-      } else {
+  // Fallback: force loading to false after 5 seconds
+  const timeout = setTimeout(() => {
+    console.log('Auth loading timeout - forcing to false')
+    setLoading(false)
+  }, 5000)
+
+  // Get initial session
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setUser(session?.user ?? null)
+    if (session?.user) {
+      fetchProfile(session.user.id).finally(() => {
         setLoading(false)
-      }
-    }).catch((error) => {
-      console.error('Error getting session:', error)
+        clearTimeout(timeout)
+      })
+    } else {
       setLoading(false)
-    })
+      clearTimeout(timeout)
+    }
+  }).catch((error) => {
+    console.error('Error getting session:', error)
+    setLoading(false)
+    clearTimeout(timeout)
+  })
 
-    const {
-  data: { subscription },
-} = supabase.auth.onAuthStateChange(async (_event, session) => {
-  setUser(session?.user ?? null)
-  if (session?.user) {
-    await fetchProfile(session.user.id)
-    setLoading(false) // ADD THIS LINE
-  } else {
-    setProfile(null)
-    setLoading(false) // ADD THIS LINE TOO
+  // ... rest of useEffect
+  
+  return () => {
+    subscription.unsubscribe()
+    clearTimeout(timeout)
   }
-})
-
-    return () => subscription.unsubscribe()
-  }, [])
+}, [])
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
