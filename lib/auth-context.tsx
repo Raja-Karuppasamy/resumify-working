@@ -70,17 +70,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     })
 
-    // Listen for auth changes
     const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        await fetchProfile(session.user.id)
-      } else {
-        setProfile(null)
-      }
-    })
+  data: { subscription },
+} = supabase.auth.onAuthStateChange(async (_event, session) => {
+  setUser(session?.user ?? null)
+  if (session?.user) {
+    await fetchProfile(session.user.id)
+    setLoading(false) // ADD THIS LINE
+  } else {
+    setProfile(null)
+    setLoading(false) // ADD THIS LINE TOO
+  }
+})
 
     return () => subscription.unsubscribe()
   }, [])
