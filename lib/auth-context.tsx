@@ -78,8 +78,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearTimeout(timeout)
   })
 
-  // ... rest of useEffect
-  
+  // Listen for auth changes
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    setUser(session?.user ?? null)
+    if (session?.user) {
+      await fetchProfile(session.user.id)
+      setLoading(false)
+    } else {
+      setProfile(null)
+      setLoading(false)
+    }
+  })
+
   return () => {
     subscription.unsubscribe()
     clearTimeout(timeout)
