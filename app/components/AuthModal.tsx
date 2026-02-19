@@ -30,34 +30,21 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     if (mode === "signup") {
       await signUp(email, password);
       setSuccess("Account created successfully!");
-      // Wait for Supabase to persist session
-      await new Promise(resolve => setTimeout(resolve, 500));
-      onClose();
-      window.location.reload();
+      setTimeout(() => {
+        onClose();
+      }, 1000);
     } else {
       await signIn(email, password);
       setSuccess("Signed in successfully!");
-      // Wait for Supabase to persist session
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onClose();
-      window.location.reload();
+      setTimeout(() => {
+        onClose();
+      }, 1000);
     }
   } catch (err: any) {
     setError(err.message || "Something went wrong");
     setLoading(false);
   }
 };
-
-  const handleGoogleSignIn = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      await signInWithGoogle();
-    } catch (err: any) {
-      setError(err.message || "Google sign in failed");
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
