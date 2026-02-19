@@ -33,6 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
   try {
+    console.log('fetchProfile: Querying for userId:', userId)
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -41,15 +42,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (error) {
       console.error('Error fetching profile:', error)
-      setLoading(false) // ADD THIS
+      setLoading(false)
       return
     }
     
+    console.log('fetchProfile: Got profile data:', data) // ADD THIS
     setProfile(data)
-    setLoading(false) // ADD THIS
+    setLoading(false)
   } catch (error) {
     console.error('Error fetching profile:', error)
-    setLoading(false) // ADD THIS
+    setLoading(false)
   }
 }
 
