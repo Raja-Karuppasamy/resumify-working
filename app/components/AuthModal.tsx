@@ -45,7 +45,16 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setLoading(false);
   }
 };
-
+const handleGoogleSignIn = async () => {
+  setError("");
+  setLoading(true);
+  try {
+    await signInWithGoogle();
+  } catch (err: any) {
+    setError(err.message || "Google sign in failed");
+    setLoading(false);
+  }
+};
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
