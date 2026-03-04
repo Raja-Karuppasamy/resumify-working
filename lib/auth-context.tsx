@@ -31,33 +31,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
- const fetchProfile = async (userId: string, forceRefresh = false) => {
+const fetchProfile = async (userId: string) => {
   try {
-    console.log('fetchProfile: START for userId:', userId, 'forceRefresh:', forceRefresh)
+    console.log('fetchProfile: START for userId:', userId)
     
-    // Skip if we already have profile and not forcing refresh
-    if (!forceRefresh && profile?.id === userId) {
-      console.log('fetchProfile: Using cached profile')
-      setLoading(false)
-      return
-    }
+    // Direct fetch instead of Supabase client
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/users?id=eq.${userId}&select=*`,
+      {
+        headers: {
+          'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
+        }
+      }
+    )
     
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    const data = await response.json()
+    console.log('fetchProfile: Got response:', data)
     
-    console.log('fetchProfile: COMPLETED - data:', data?.subscription_tier)
-    
-    if (error) {
-      console.error('fetchProfile: Error:', error)
-      setLoading(false)
-      return
-    }
-    
-    if (data) {
-      setProfile(data)
+    if (data && data.length > 0) {
+      console.log('fetchProfile: Setting profile tier:', data[0].subscription_tier)
+      setProfile(data[0])
     }
     
     setLoading(false)
