@@ -180,6 +180,7 @@ const value = {
 
 return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 
+}
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
