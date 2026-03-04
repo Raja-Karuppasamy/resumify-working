@@ -35,11 +35,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   try {
     console.log('fetchProfile: START for userId:', userId)
     
-    const { data, error } = await supabase
+    // Add a timeout wrapper
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Timeout')), 5000)
+    )
+    
+    const fetchPromise = supabase
       .from('users')
       .select('*')
       .eq('id', userId)
       .single()
+    
+    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any
     
     console.log('fetchProfile: COMPLETED - data:', data, 'error:', error)
     
@@ -56,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setLoading(false)
   } catch (error) {
-    console.error('fetchProfile: Exception:', error)
+    console.error('fetchProfile: Exception or timeout:', error)
     setLoading(false)
   }
 }
