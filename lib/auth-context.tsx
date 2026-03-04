@@ -31,24 +31,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
- const fetchProfile = async (userId: string) => {
+ const fetchProfile = async (userId: string, forceRefresh = false) => {
   try {
-    console.log('fetchProfile: START for userId:', userId)
+    console.log('fetchProfile: START for userId:', userId, 'forceRefresh:', forceRefresh)
     
-    // Add a timeout wrapper
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Timeout')), 5000)
-    )
+    // Skip if we already have profile and not forcing refresh
+    if (!forceRefresh && profile?.id === userId) {
+      console.log('fetchProfile: Using cached profile')
+      setLoading(false)
+      return
+    }
     
-    const fetchPromise = supabase
+    const { data, error } = await supabase
       .from('users')
       .select('*')
       .eq('id', userId)
       .single()
     
-    const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any
-    
-    console.log('fetchProfile: COMPLETED - data:', data, 'error:', error)
+    console.log('fetchProfile: COMPLETED - data:', data?.subscription_tier)
     
     if (error) {
       console.error('fetchProfile: Error:', error)
@@ -57,13 +57,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     if (data) {
-      console.log('fetchProfile: Setting profile with tier:', data.subscription_tier)
       setProfile(data)
     }
     
     setLoading(false)
   } catch (error) {
-    console.error('fetchProfile: Exception or timeout:', error)
+    console.error('fetchProfile: Exception:', error)
     setLoading(false)
   }
 }
@@ -169,7 +168,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
   const refreshProfile = async () => {
   if (user) {
-    await fetchProfile(user.id)
+    await fetchProfile(user.id, true) // force refresh
   }
 }
   const value = {
