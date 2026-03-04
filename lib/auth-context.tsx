@@ -31,14 +31,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const fetchProfile = async (userId: string) => {
+ const fetchProfile = async (userId: string) => {
   try {
-    console.log('fetchProfile: Querying for userId:', userId)
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', userId)
-      .single()
+    console.log('fetchProfile: START - Querying for userId:', userId)
+    console.log('fetchProfile: Supabase client exists?', !!supabase)
+    console.log('fetchProfile: About to call supabase.from()...')
+    
+    const query = supabase.from('users')
+    console.log('fetchProfile: Created query object')
+    
+    const selectQuery = query.select('*')
+    console.log('fetchProfile: Added select')
+    
+    const eqQuery = selectQuery.eq('id', userId)
+    console.log('fetchProfile: Added eq filter')
+    
+    const singleQuery = eqQuery.single()
+    console.log('fetchProfile: Added single(), now executing...')
+    
+    const { data, error } = await singleQuery
+    
+    console.log('fetchProfile: Query COMPLETED')
+    console.log('fetchProfile: Error?', error)
+    console.log('fetchProfile: Data?', data)
     
     if (error) {
       console.error('Error fetching profile:', error)
@@ -46,37 +61,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     
-    console.log('fetchProfile: Got profile data:', data) // ADD THIS
+    console.log('fetchProfile: Setting profile state')
     setProfile(data)
     setLoading(false)
+    console.log('fetchProfile: DONE')
   } catch (error) {
-    console.error('Error fetching profile:', error)
+    console.error('fetchProfile: CAUGHT EXCEPTION:', error)
     setLoading(false)
   }
 }
-
-  useEffect(() => {
-  console.log('Auth: useEffect running')
-  
-  // Get initial session
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    console.log('Auth: Got session', session?.user?.email || 'no user')
-    setUser(session?.user ?? null)
-    if (session?.user) {
-      console.log('Auth: Fetching profile for', session.user.id)
-      fetchProfile(session.user.id).finally(() => {
-        console.log('Auth: Profile fetch complete, setting loading false')
-        setLoading(false)
-      })
-    } else {
-      console.log('Auth: No user, setting loading false')
-      setLoading(false)
-    }
-  }).catch((error) => {
-    console.error('Error getting session:', error)
-    setLoading(false)
-  })
-
   // Listen for auth changes
   const {
     data: { subscription },
