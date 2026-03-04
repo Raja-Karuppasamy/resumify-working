@@ -160,24 +160,25 @@ const fetchProfile = async (userId: string) => {
     })
     if (error) throw error
   }
+  
   const refreshProfile = async () => {
   if (user) {
-    await fetchProfile(user.id, true) // force refresh
+    await fetchProfile(user.id) // Changed from: await fetchProfile(user.id, true)
   }
 }
-  const value = {
-    user,
-    profile,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-    signInWithGoogle,
-    refreshProfile,
-  }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+const value = {
+  user,
+  profile,
+  loading,
+  signIn,
+  signUp,
+  signOut,
+  signInWithGoogle,
+  refreshProfile,
 }
+
+return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 
 export function useAuth() {
   const context = useContext(AuthContext)
