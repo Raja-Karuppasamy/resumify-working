@@ -33,40 +33,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
  const fetchProfile = async (userId: string) => {
   try {
-    console.log('fetchProfile: START - Querying for userId:', userId)
-    console.log('fetchProfile: Supabase client exists?', !!supabase)
-    console.log('fetchProfile: About to call supabase.from()...')
+    console.log('fetchProfile: START for userId:', userId)
     
-    const query = supabase.from('users')
-    console.log('fetchProfile: Created query object')
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single()
     
-    const selectQuery = query.select('*')
-    console.log('fetchProfile: Added select')
-    
-    const eqQuery = selectQuery.eq('id', userId)
-    console.log('fetchProfile: Added eq filter')
-    
-    const singleQuery = eqQuery.single()
-    console.log('fetchProfile: Added single(), now executing...')
-    
-    const { data, error } = await singleQuery
-    
-    console.log('fetchProfile: Query COMPLETED')
-    console.log('fetchProfile: Error?', error)
-    console.log('fetchProfile: Data?', data)
+    console.log('fetchProfile: COMPLETED - data:', data, 'error:', error)
     
     if (error) {
-      console.error('Error fetching profile:', error)
+      console.error('fetchProfile: Error:', error)
       setLoading(false)
       return
     }
     
-    console.log('fetchProfile: Setting profile state')
-    setProfile(data)
+    if (data) {
+      console.log('fetchProfile: Setting profile with tier:', data.subscription_tier)
+      setProfile(data)
+    }
+    
     setLoading(false)
-    console.log('fetchProfile: DONE')
   } catch (error) {
-    console.error('fetchProfile: CAUGHT EXCEPTION:', error)
+    console.error('fetchProfile: Exception:', error)
     setLoading(false)
   }
 }
