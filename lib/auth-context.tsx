@@ -70,6 +70,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }
 }
+ useEffect(() => {
+  console.log('Auth: useEffect running')
+  
+  // Get initial session
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    console.log('Auth: Got session', session?.user?.email || 'no user')
+    setUser(session?.user ?? null)
+    if (session?.user) {
+      console.log('Auth: Fetching profile for', session.user.id)
+      fetchProfile(session.user.id).finally(() => {
+        console.log('Auth: Profile fetch complete, setting loading false')
+        setLoading(false)
+      })
+    } else {
+      console.log('Auth: No user, setting loading false')
+      setLoading(false)
+    }
+  }).catch((error) => {
+    console.error('Error getting session:', error)
+    setLoading(false)
+  })
+
   // Listen for auth changes
   const {
     data: { subscription },
@@ -87,7 +109,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return () => subscription.unsubscribe()
 }, [])
-
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
