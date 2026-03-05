@@ -33,7 +33,7 @@ export default function CTAHeader() {
           <div className="flex justify-between items-center h-16">
             
             <Link href="/" className="flex items-center gap-2">
-  <span className="font-semibold text-lg">Resumify</span>
+            <span className="font-semibold text-2xl">Resumify</span>
 </Link>
             {/* Navigation */}
             <div className="flex items-center gap-6">
