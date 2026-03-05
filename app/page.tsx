@@ -911,27 +911,7 @@ const handleUpload = async () => {
     </div>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
-              R
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                Resumify Resume Parser API
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">
-                AI-powered parsing with quality scoring & ATS analysis
-              </p>
-            </div>
-          </div>
-          <span className="hidden md:inline-flex items-center gap-2 text-xs px-4 py-2 rounded-full bg-emerald-100 text-emerald-800 font-medium shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            Live Parsing
-          </span>
-        </header>
-
+      
         {rateLimited && (
           <div className="mb-4 rounded-xl border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-900">
             <div className="font-semibold">Rate limit reached</div>
