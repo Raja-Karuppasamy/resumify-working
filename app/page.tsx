@@ -772,11 +772,14 @@ const handleUpload = async () => {
 
     if (!res.ok) {
       if (res.status === 429) {
-        // Rate limited - auto-open modal
-        const errorData = await res.json();
-        setRateLimited(true);
-        setError(errorData.detail || "Rate limit exceeded. Upgrade to continue.");
-        setShowAuthModal(true); // AUTO-OPEN MODAL
+  const errorData = await res.json();
+  setRateLimited(true);
+  
+  // Check if it's daily or hourly limit
+  const errorMessage = errorData.detail || "Rate limit exceeded. Upgrade to continue.";
+  setError(errorMessage);  // Use the backend's message directly
+  
+  setShowAuthModal(true);
         
         // Refetch rate limit
         try {
