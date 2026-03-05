@@ -16,7 +16,7 @@ export default function AnonymousBanner({
       <div className="flex items-start gap-3">
         <div className="text-2xl">🎉</div>
         <div className="flex-1">
-          // app/components/AnonymousBanner.tsx
+         
 <p className="text-sm text-gray-800">
   <strong className="font-semibold">Free tier:</strong> You have{' '}
   <span className="font-bold text-blue-600">{remainingParses}/{maxParses}</span>{' '}
