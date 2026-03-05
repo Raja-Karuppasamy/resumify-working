@@ -706,22 +706,27 @@ export default function Page() {
 
  useEffect(() => {
   const checkAuth = async () => {
-    const apiKey = localStorage.getItem('apiKey');
-    setIsLoggedIn(!!apiKey);
-    
-    // Fetch initial remaining parses for anonymous users
-    if (!apiKey && API_URL) {
-      try {
-        const res = await fetch(`${API_URL}/rate-limit/check`);
-        if (res.ok) {
-          const data = await res.json();
-          setRemainingParses(data.remaining);
+  const apiKey = localStorage.getItem('apiKey');
+  setIsLoggedIn(!!apiKey);
+  
+  // Fetch initial remaining parses for anonymous users
+  if (!apiKey && API_URL) {
+    try {
+      const res = await fetch(`${API_URL}/rate-limit/check`);
+      if (res.ok) {
+        const data = await res.json();
+        // For free tier, use daily limit
+        if (data.daily) {
+          setRemainingParses(data.daily.remaining);
+        } else if (data.hourly) {
+          setRemainingParses(data.hourly.remaining);
         }
-      } catch (e) {
-        console.log("Could not fetch rate limit");
       }
+    } catch (e) {
+      console.log("Could not fetch rate limit");
     }
-  };
+  }
+};
   checkAuth();
 }, []);
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -738,7 +743,7 @@ export default function Page() {
     setFile(selectedFile);
   };
 
-  const handleUpload = async () => {
+const handleUpload = async () => {
   if (!file) {
     setError("Please select a file first.");
     return;
@@ -766,8 +771,32 @@ export default function Page() {
     });
 
     if (!res.ok) {
-      let message = `Backend returned ${res.status}`;
+      if (res.status === 429) {
+        // Rate limited - auto-open modal
+        const errorData = await res.json();
+        setRateLimited(true);
+        setError(errorData.detail || "Rate limit exceeded. Upgrade to continue.");
+        setShowAuthModal(true); // AUTO-OPEN MODAL
+        
+        // Refetch rate limit
+        try {
+          const rateLimitRes = await fetch(`${API_URL}/rate-limit/check`);
+          if (rateLimitRes.ok) {
+            const data = await rateLimitRes.json();
+            if (data.daily) {
+              setRemainingParses(data.daily.remaining);
+            } else if (data.hourly) {
+              setRemainingParses(data.hourly.remaining);
+            }
+          }
+        } catch (e) {
+          console.error("Could not refetch rate limit");
+        }
+        return;
+      }
 
+      // Other errors
+      let message = `Backend returned ${res.status}`;
       try {
         const data = await res.json();
         message += `: ${data.detail || JSON.stringify(data)}`;
@@ -775,7 +804,6 @@ export default function Page() {
         const text = await res.text();
         if (text) message += `: ${text.slice(0, 300)}`;
       }
-
       throw new Error(message);
     }
 
@@ -783,17 +811,19 @@ export default function Page() {
     setResult(parsedData);
     setEditedData({ ...parsedData });
 
-    // Update remaining parses count - MUST be inside this try block
+    // Refetch rate limit after successful parse
     try {
       const rateLimitRes = await fetch(`${API_URL}/rate-limit/check`);
-      console.log("Rate limit check response:", rateLimitRes.status);
-      
       if (rateLimitRes.ok) {
         const rateLimitData = await rateLimitRes.json();
         console.log("Rate limit data:", rateLimitData);
-        setRemainingParses(rateLimitData.remaining);
-        console.log("Setting remaining parses to:", rateLimitData.remaining);
-        console.log("Current remainingParses state:", remainingParses);
+        
+        if (rateLimitData.daily) {
+          setRemainingParses(rateLimitData.daily.remaining);
+        } else if (rateLimitData.hourly) {
+          setRemainingParses(rateLimitData.hourly.remaining);
+        }
+        
         if (rateLimitData.is_rate_limited) {
           setRateLimited(true);
         }
@@ -804,15 +834,7 @@ export default function Page() {
 
   } catch (e: any) {
     console.error("Upload failed:", e);
-
-    if (e.message.includes("429")) {
-      setRateLimited(true);
-      setError("Rate limited — please wait a minute before trying again.");
-    } else if (e.name === "TypeError" && e.message.includes("fetch")) {
-      setError("Network error: Unable to reach backend. Check API URL or CORS.");
-    } else {
-      setError(e.message || "Failed to parse resume. Please try again.");
-    }
+    setError(e.message || "Failed to parse resume. Please try again.");
   } finally {
     setLoading(false);
   }
@@ -876,13 +898,13 @@ export default function Page() {
     
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
       {!user && (
-     <AnonymousBanner
-       key={remainingParses}
-       remainingParses={remainingParses} 
-       maxParses={5}
-       onSignUpClick={() => setShowAuthModal(true)}
-     />
-   )}
+  <AnonymousBanner
+    key={remainingParses}
+    remainingParses={remainingParses} 
+    maxParses={5}
+    onSignUpClick={() => setShowAuthModal(true)}
+  />
+)}
     </div>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">

@@ -16,17 +16,18 @@ export default function AnonymousBanner({
       <div className="flex items-start gap-3">
         <div className="text-2xl">🎉</div>
         <div className="flex-1">
-          <p className="text-sm text-gray-800">
-            <strong className="font-semibold">Free tier:</strong> You have{' '}
-            <span className="font-bold text-blue-600">{remainingParses}/{maxParses}</span>{' '}
-            parses remaining this hour.{' '}
-            <button
-              onClick={onSignUpClick}
-              className="underline font-medium text-blue-700 hover:text-blue-800 transition-colors cursor-pointer"
-            >
-              Sign up for unlimited parsing →
-            </button>
-          </p>
+          // app/components/AnonymousBanner.tsx
+<p className="text-sm text-gray-800">
+  <strong className="font-semibold">Free tier:</strong> You have{' '}
+  <span className="font-bold text-blue-600">{remainingParses}/{maxParses}</span>{' '}
+  parses remaining today.{' '}
+  <button
+    onClick={onSignUpClick}
+    className="underline font-medium text-blue-700 hover:text-blue-800 transition-colors cursor-pointer"
+  >
+    Sign up for unlimited parsing →
+  </button>
+</p>
         </div>
       </div>
     </div>
