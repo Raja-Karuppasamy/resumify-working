@@ -110,16 +110,13 @@ const plans = [
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">R</span>
-            </div>
-            <span className="text-xl font-bold text-gray-900">Resumify</span>
-          </Link>
+  <span className="text-2xl font-semibold text-gray-900">Resumify</span>
+</Link>
           <nav className="flex items-center gap-6">
             <Link href="/" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium">Home</Link>
             <Link href="/pricing" className="text-indigo-600 font-semibold text-sm">Pricing</Link>
             <Link href="/" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">
-              Get API Key
+              Get Started
             </Link>
           </nav>
         </div>
@@ -127,12 +124,11 @@ const plans = [
 
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-10 text-center">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
-          <span className="text-indigo-600 text-sm font-semibold">💎 Simple, transparent pricing</span>
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
-  Stop Wasting Time on<br />
-  <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Rejected Resumes</span>
+        <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1.5 mb-6">
+  <span className="text-emerald-700 text-sm font-semibold">Start free, upgrade anytime</span>
+</div>
+        <h1 className="text-3xl font-bold text-gray-900">
+  Simple Pricing for Recruiting Teams
 </h1>
 <p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
   Check ATS compatibility before you submit. Start free, upgrade when you need more capacity.

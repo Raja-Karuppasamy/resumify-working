@@ -69,7 +69,7 @@ export default function CTAHeader() {
     onClick={() => setShowAuthModal(true)}
     className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
   >
-    Get API Key
+    Get Started
   </button>
 )}
             </div>
