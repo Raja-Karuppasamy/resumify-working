@@ -925,16 +925,19 @@ const handleUpload = async () => {
           <section className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-indigo-50/50">
             <div className="px-8 pt-8 pb-6 border-b border-indigo-100">
               <p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
-                AI-Powered Resume Parser
-              </p>
-              <p className="mt-1 text-sm text-gray-600">
-                Upload PDF resumes for 95% accurate parsing with quality scoring and ATS compatibility analysis
-              </p>
+  For Recruiters & Staffing Agencies
+</p>
+<h2 className="mt-2 text-2xl font-bold text-gray-900">
+  Will This Resume Pass ATS?
+</h2>
+<p className="mt-2 text-sm text-gray-600">
+  Stop submitting resumes that get auto-rejected. Get instant ATS compatibility scores and quality checks in 5 seconds.
+</p>
             </div>
             
-            <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 mx-8 mt-6">
-              🤖 <strong>AI-Powered</strong> — Using Claude AI for 95% accuracy vs 60% industry average
-            </div>
+            <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 mx-8 mt-6">
+  ✅ <strong>Instant Results</strong> — Know if a resume will pass ATS before you waste time submitting it
+</div>
 
             <div className="p-8 space-y-8">
               {!result ? (
@@ -942,8 +945,8 @@ const handleUpload = async () => {
                   {/* Upload Area */}
                   <div className="space-y-4">
                     <label className="block text-sm font-semibold text-gray-800 mb-3">
-                      Choose Resume File (PDF)
-                    </label>
+  Upload Candidate Resume (PDF)
+</label>
                     <div className="mt-2">
                       <label
                         htmlFor="resume-upload"
