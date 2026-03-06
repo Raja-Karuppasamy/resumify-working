@@ -6,8 +6,8 @@ import { AuthProvider } from "../lib/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Resumify - AI Resume Parser",
-  description: "Parse resumes with 95% accuracy using AI",
+  title: "Resumify - ATS Resume Checker for Recruiters",
+  description: "Check if resumes will pass ATS in 5 seconds. Get instant compatibility scores and quality checks. Trusted by recruiting agencies.",
 };
 
 export default function RootLayout({
