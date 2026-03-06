@@ -277,23 +277,23 @@ const plans = [
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
         <div className="space-y-6">
           {[
-            {
-              q: "Do I need a credit card to start?",
-              a: "Nope! You can start with the Free plan right away — no credit card needed. Upgrade anytime when you're ready.",
-            },
-            {
-              q: "What happens if I exceed my monthly limit?",
-              a: "Parsing will be paused until your next billing cycle. You'll see a clear message prompting you to upgrade. No surprise charges.",
-            },
-            {
-              q: "Can I switch plans at any time?",
-              a: "Yes! You can upgrade or downgrade your plan at any time from your account settings. Changes take effect immediately.",
-            },
-            {
-              q: "What kind of resumes does Resumify support?",
-              a: "Resumify supports PDF resumes in any format. Our Claude AI-powered parser handles complex layouts, multi-column designs, and various styles with 95% accuracy.",
-            },
-          ].map((faq, i) => (
+  {
+    q: "Do I need a credit card to start?",
+    a: "No! Start with 5 free ATS checks per day. No credit card required. Upgrade when you need more capacity.",
+  },
+  {
+    q: "What happens if I exceed my monthly limit?",
+    a: "You'll see a message prompting you to upgrade. No surprise charges - you're always in control.",
+  },
+  {
+    q: "How accurate is the ATS scoring?",
+    a: "Our AI-powered system achieves 95% accuracy by analyzing resume formatting, keywords, and structure - the same factors ATS systems use to filter candidates.",
+  },
+  {
+    q: "What types of resumes can I check?",
+    a: "Any PDF resume. Our system handles complex layouts, multi-column designs, and various formatting styles that often cause ATS issues.",
+  },
+].map((faq, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
               <h3 className="text-base font-semibold text-gray-900">{faq.q}</h3>
               <p className="text-sm text-gray-500 mt-2 leading-relaxed">{faq.a}</p>
