@@ -66,45 +66,43 @@ useEffect(() => {
   const usageCount = profile?.usage_count || 0
   const usageLimit = currentTier === 'free' ? 20 : currentTier === 'pro' ? 100 : 500
 
-  const plans = [
-    {
-      key: 'free' as const,
-      features: [
-        '20 resumes per month',
-        'AI-powered parsing (95% accuracy)',
-        'Quality scoring',
-        'ATS compatibility analysis',
-        'JSON export',
-      ],
-    },
-    {
-      key: 'pro' as const,
-      badge: 'Most Popular',
-      features: [
-        '100 resumes per month',
-        'AI-powered parsing (95% accuracy)',
-        'Quality scoring',
-        'ATS compatibility analysis',
-        'JSON export',
-        'Priority processing',
-        'Email support',
-      ],
-    },
-    {
-      key: 'enterprise' as const,
-      features: [
-        '500 resumes per month',
-        'AI-powered parsing (95% accuracy)',
-        'Quality scoring',
-        'ATS compatibility analysis',
-        'JSON export',
-        'Priority processing',
-        'Email support (24/7)',
-        'Advanced analytics',
-        'Custom integrations',
-      ],
-    },
-  ]
+const plans = [
+  {
+    key: 'free' as const,
+    features: [
+      '5 resumes per day',
+      'ATS compatibility scoring',
+      'Quality analysis & red flags',
+      'Instant results',
+      'Perfect for testing',
+    ],
+  },
+  {
+    key: 'pro' as const,
+    badge: 'Most Popular',
+    features: [
+      '100 resumes per month',
+      'ATS compatibility scoring',
+      'Quality analysis & red flags',
+      'Instant results',
+      'Bulk screening support',
+      'Email support',
+    ],
+  },
+  {
+    key: 'enterprise' as const,
+    features: [
+      '500 resumes per month',
+      'ATS compatibility scoring',
+      'Quality analysis & red flags',
+      'Instant results',
+      'Bulk screening support',
+      'Priority email support',
+      'Team access (coming soon)',
+      'API access (coming soon)',
+    ],
+  },
+]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
@@ -133,12 +131,12 @@ useEffect(() => {
           <span className="text-indigo-600 text-sm font-semibold">💎 Simple, transparent pricing</span>
         </div>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight">
-          Choose the plan that<br />
-          <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">fits your needs</span>
-        </h1>
-        <p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
-          Start free, upgrade when you're ready. No hidden fees, no credit card required to get started.
-        </p>
+  Stop Wasting Time on<br />
+  <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Rejected Resumes</span>
+</h1>
+<p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
+  Check ATS compatibility before you submit. Start free, upgrade when you need more capacity.
+</p>
 
         {/* Current plan badge - only for logged in users */}
         {user && profile && (
