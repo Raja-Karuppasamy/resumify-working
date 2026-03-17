@@ -313,7 +313,7 @@ const plans = [
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-24">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
         <div className="space-y-6">
-         // REPLACE the faq array with:
+    
 {[
   {
     q: "Do I need a credit card to start?",
@@ -336,9 +336,9 @@ const plans = [
     a: "Yes. Startup and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
   },
   {
-    q: "Do you offer annual billing?",
-    a: "Yes — toggle to Annual to save 20%. We also offer custom invoice billing for Enterprise contracts.",
-  },
+  q: "Can I cancel anytime?",
+  a: "Yes. Cancel anytime from your dashboard — no contracts, no cancellation fees. Your plan stays active until the end of the billing period.",
+},
 ].map((faq, i) => (
 
             <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
@@ -352,7 +352,7 @@ const plans = [
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center">
-          // REPLACE WITH:
+      
 <div className="space-y-2">
   <div className="flex justify-center flex-wrap gap-6 text-sm">
     <a href="/api-info" className="text-indigo-600 hover:text-indigo-800 font-medium">API Docs</a>
