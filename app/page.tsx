@@ -924,29 +924,65 @@ const handleUpload = async () => {
         <main className="max-w-4xl mx-auto">
           <section className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-indigo-50/50">
             <div className="px-8 pt-8 pb-6 border-b border-indigo-100">
-              <p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
-  For Recruiters & Staffing Agencies
+             // REPLACE WITH:
+<p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
+  For Recruiters · ATS Platforms · Job Boards · Universities
 </p>
-<h2 className="mt-2 text-2xl font-bold text-gray-900">
-  Will This Resume Pass ATS?
+<h2 className="mt-2 text-3xl font-bold text-gray-900">
+  Resume Intelligence API
 </h2>
-<p className="mt-2 text-sm text-gray-600">
-  Stop submitting resumes that get auto-rejected. Get instant ATS compatibility scores and quality checks in 5 seconds.
+<p className="mt-2 text-base text-gray-600">
+  Turn any CV into structured hiring data in under 200ms. ATS scoring, 
+  quality grading, and 56-field extraction — drop into your stack with 
+  a single API call.
 </p>
-            </div>
-            
-            <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 mx-8 mt-6">
-  ✅ <strong>Instant Results</strong> — Know if a resume will pass ATS before you waste time submitting it
+
+{/* Trust Badges — ADD THIS BLOCK right after the <p> above */}
+<div className="mt-4 flex flex-wrap gap-2">
+  {[
+    "⚡ <200ms Response",
+    "🎯 92% Parse Confidence",
+    "✅ 95/100 ATS Score",
+    "🔒 GDPR-Ready",
+    "📄 PDF · DOCX · TXT",
+  ].map((badge) => (
+    <span key={badge} className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
+      {badge}
+    </span>
+  ))}
 </div>
+
+            
+            // REPLACE WITH:
+<div className="mb-6 mx-8 mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 text-center">
+    🏢 <strong>Staffing Agencies</strong><br/>
+    <span className="text-xs">Batch parse 100s of CVs daily</span>
+  </div>
+  <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 text-center">
+    ⚙️ <strong>ATS & HR SaaS</strong><br/>
+    <span className="text-xs">Drop-in API, JSON output, webhooks</span>
+  </div>
+  <div className="rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-sm text-purple-800 text-center">
+    🎓 <strong>Universities</strong><br/>
+    <span className="text-xs">Score student CVs at scale</span>
+  </div>
+</div>
+
 
             <div className="p-8 space-y-8">
               {!result ? (
                 <>
                   {/* Upload Area */}
                   <div className="space-y-4">
-                    <label className="block text-sm font-semibold text-gray-800 mb-3">
-  Upload Candidate Resume (PDF)
+                    // REPLACE WITH:
+<label className="block text-sm font-semibold text-gray-800 mb-3">
+  Upload Resume to Test API  
+  <span className="ml-2 text-xs font-normal text-gray-500">
+    (PDF, DOCX, TXT · max 10MB)
+  </span>
 </label>
+
                     <div className="mt-2">
                       <label
                         htmlFor="resume-upload"
@@ -1039,10 +1075,12 @@ const handleUpload = async () => {
                       </>
                     ) : (
                       <>
-                        <span>🤖 Parse with AI</span>
-                        <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors">
-                          95% accuracy
-                        </span>
+                        // REPLACE WITH:
+<span>🤖 Parse Resume — Get Structured JSON</span>
+<span className="ml-2 text-indigo-200 group-hover:text-white transition-colors text-sm">
+  Free · No card required
+</span>
+
                       </>
                     )}
                   </button>
@@ -1121,53 +1159,73 @@ const handleUpload = async () => {
             </div>
           </section>
 
-          {/* Features Section */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl mb-4">
-                🤖
-              </div>
-              <h3 className="font-bold text-gray-900 mb-2">AI-Powered</h3>
-              <p className="text-sm text-gray-600">
-                Claude AI achieves 95% accuracy vs 60% industry average for resume parsing
-              </p>
-            </div>
+         {/* Features Section */}
+<div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+    <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl mb-4">
+      🏢
+    </div>
+    <h3 className="font-bold text-gray-900 mb-2">Staffing Agencies</h3>
+    <p className="text-sm text-gray-600">
+      Process 100s of CVs daily. Webhooks push structured JSON 
+      directly into your ATS or CRM — zero manual entry.
+    </p>
+  </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">
-                📊
-              </div>
-              <h3 className="font-bold text-gray-900 mb-2">Quality Scoring</h3>
-              <p className="text-sm text-gray-600">
-                Get detailed quality analysis with actionable recommendations to improve your resume
-              </p>
-            </div>
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+    <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">
+      ⚙️
+    </div>
+    <h3 className="font-bold text-gray-900 mb-2">ATS & HR Platforms</h3>
+    <p className="text-sm text-gray-600">
+      Add resume parsing to your product in one afternoon. 
+      REST API, 56-field JSON output, no NLP team needed.
+    </p>
+  </div>
 
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">
-                🎯
-              </div>
-              <h3 className="font-bold text-gray-900 mb-2">ATS Compatible</h3>
-              <p className="text-sm text-gray-600">
-                Check if your resume will pass Applicant Tracking Systems with detailed compatibility analysis
-              </p>
-            </div>
-          </div>
-        </main>
+  <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
+    <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">
+      🎓
+    </div>
+    <h3 className="font-bold text-gray-900 mb-2">University Career Centers</h3>
+    <p className="text-sm text-gray-600">
+      Score and benchmark student CVs at scale. Identify skill 
+      gaps across your graduating cohort before campus recruitment.
+    </p>
+  </div>
+</div>
+
+{/* Integrations Strip */}
+<div className="mt-8 bg-white/60 rounded-2xl p-6 border border-gray-100 text-center">
+  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+    Integrates With
+  </p>
+  <div className="flex flex-wrap justify-center gap-3">
+    {["Greenhouse", "Lever", "Workday", "BambooHR", "Zapier", "Make", "Salesforce", "HubSpot"].map((name) => (
+      <span key={name} className="px-3 py-1 text-sm font-medium text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
+        {name}
+      </span>
+    ))}
+  </div>
+</div>
+
+</main>
 
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-500">
-          <p>
-            Built with FastAPI, Claude AI & Next.js •{" "}
-            <a
-              href="https://github.com/yourusername/resume-parser"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-800 font-medium"
-            >
-              View on GitHub
-            </a>
-          </p>
+         // REPLACE WITH:
+<div className="space-y-2">
+  <div className="flex justify-center gap-6 text-sm">
+    <a href="/docs" className="text-indigo-600 hover:text-indigo-800 font-medium">API Docs</a>
+    <a href="/pricing" className="text-indigo-600 hover:text-indigo-800 font-medium">Pricing</a>
+    <a href="mailto:hello@resumifyapi.com" className="text-indigo-600 hover:text-indigo-800 font-medium">Contact Sales</a>
+    <a href="/privacy" className="text-indigo-600 hover:text-indigo-800 font-medium">Privacy</a>
+  </div>
+  <p className="text-gray-400 text-xs">
+    © 2026 Resumify · Resume Intelligence API · GDPR Ready
+  </p>
+</div>
+
         </footer>
       </div>
    </div>

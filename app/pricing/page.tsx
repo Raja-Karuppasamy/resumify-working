@@ -66,43 +66,59 @@ useEffect(() => {
   const usageCount = profile?.usage_count || 0
   const usageLimit = currentTier === 'free' ? 20 : currentTier === 'pro' ? 100 : 500
 
+// REPLACE entire plans array with:
 const plans = [
   {
     key: 'free' as const,
+    name: 'Developer',
+    price: 0,
+    priceLabel: 'forever',
+    volume: '200 parses/mo',
     features: [
-      '5 resumes per day',
+      '200 resume parses per month',
       'ATS compatibility scoring',
-      'Quality analysis & red flags',
-      'Instant results',
-      'Perfect for testing',
+      'Quality analysis & grading',
+      'Instant JSON results',
+      'REST API access',
+      'Community support',
     ],
   },
   {
     key: 'pro' as const,
+    name: 'Startup',
     badge: 'Most Popular',
+    price: 49,
+    priceLabel: '/month',
+    volume: '2,000 parses/mo',
     features: [
-      '100 resumes per month',
+      '2,000 resume parses per month',
       'ATS compatibility scoring',
-      'Quality analysis & red flags',
-      'Instant results',
-      'Bulk screening support',
+      'Quality analysis & grading',
+      'Webhooks (push to your ATS/CRM)',
+      'JD match scoring',
+      'PDF + DOCX + TXT support',
       'Email support',
     ],
   },
   {
     key: 'enterprise' as const,
+    name: 'Growth',
+    price: 199,
+    priceLabel: '/month',
+    volume: '20,000 parses/mo',
     features: [
-      '500 resumes per month',
-      'ATS compatibility scoring',
-      'Quality analysis & red flags',
-      'Instant results',
-      'Bulk screening support',
-      'Priority email support',
-      'Team access (coming soon)',
-      'API access (coming soon)',
+      '20,000 resume parses per month',
+      'Everything in Startup',
+      'Batch ZIP upload API',
+      'Priority webhooks + retry logic',
+      '99.9% uptime SLA',
+      'White-label ready',
+      'Priority support',
+      'Custom Enterprise → Talk to Sales',
     ],
   },
 ]
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
@@ -127,12 +143,15 @@ const plans = [
         <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1.5 mb-6">
   <span className="text-emerald-700 text-sm font-semibold">Start free, upgrade anytime</span>
 </div>
-        <h1 className="text-3xl font-bold text-gray-900">
-  Simple Pricing for Recruiting Teams
+        // REPLACE WITH:
+<h1 className="text-3xl font-bold text-gray-900">
+  Simple, Usage-Based API Pricing
 </h1>
 <p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
-  Check ATS compatibility before you submit. Start free, upgrade when you need more capacity.
+  Start free. Scale as you grow. No contracts, no setup fees. 
+  Cancel anytime.
 </p>
+
 
         {/* Current plan badge - only for logged in users */}
         {user && profile && (
@@ -267,29 +286,61 @@ const plans = [
           })}
         </div>
       </section>
+      {/* Enterprise Custom Banner */}
+<div className="mt-8 bg-white border border-indigo-100 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+  <div>
+    <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">
+      Enterprise
+    </p>
+    <h3 className="text-xl font-bold text-gray-900">
+      Need Unlimited Parses or White-Label?
+    </h3>
+    <p className="text-sm text-gray-500 mt-1">
+      Custom volume · Dedicated SLA · White-label · Invoice billing · 
+      Onboarding support
+    </p>
+  </div>
+  <a
+    href="mailto:sales@resumifyapi.com"
+    className="flex-shrink-0 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-md"
+  >
+    Talk to Sales →
+  </a>
+</div>
+
 
       {/* FAQ Section */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-24">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
         <div className="space-y-6">
-          {[
+         // REPLACE the faq array with:
+{[
   {
     q: "Do I need a credit card to start?",
-    a: "No! Start with 5 free ATS checks per day. No credit card required. Upgrade when you need more capacity.",
+    a: "No. The Developer plan is free forever — 200 parses/month, full API access, no card required. Upgrade when your volume grows.",
   },
   {
-    q: "What happens if I exceed my monthly limit?",
-    a: "You'll see a message prompting you to upgrade. No surprise charges - you're always in control.",
+    q: "What file formats do you support?",
+    a: "PDF, DOCX, and TXT. Max file size 10MB per resume. Batch endpoint accepts ZIP files with up to 50 resumes.",
   },
   {
-    q: "How accurate is the ATS scoring?",
-    a: "Our AI-powered system achieves 95% accuracy by analyzing resume formatting, keywords, and structure - the same factors ATS systems use to filter candidates.",
+    q: "How accurate is the parsing?",
+    a: "92% overall confidence with AI-powered extraction. Per-field confidence scores are included in every API response so you know exactly what to trust.",
   },
   {
-    q: "What types of resumes can I check?",
-    a: "Any PDF resume. Our system handles complex layouts, multi-column designs, and various formatting styles that often cause ATS issues.",
+    q: "Is Resumify GDPR compliant?",
+    a: "Yes. Raw resume files are deleted immediately after parsing. Structured JSON is retained for 30 days. No third-party data sharing.",
+  },
+  {
+    q: "Can I integrate this with my ATS or CRM?",
+    a: "Yes. Startup and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
+  },
+  {
+    q: "Do you offer annual billing?",
+    a: "Yes — toggle to Annual to save 20%. We also offer custom invoice billing for Enterprise contracts.",
   },
 ].map((faq, i) => (
+
             <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
               <h3 className="text-base font-semibold text-gray-900">{faq.q}</h3>
               <p className="text-sm text-gray-500 mt-2 leading-relaxed">{faq.a}</p>
@@ -301,9 +352,19 @@ const plans = [
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center">
-          <p className="text-gray-400 text-sm">
-            Built with FastAPI, Claude AI & Next.js · © 2026 Resumify
-          </p>
+          // REPLACE WITH:
+<div className="space-y-2">
+  <div className="flex justify-center flex-wrap gap-6 text-sm">
+    <a href="/api-info" className="text-indigo-600 hover:text-indigo-800 font-medium">API Docs</a>
+    <a href="/pricing" className="text-indigo-600 hover:text-indigo-800 font-medium">Pricing</a>
+    <a href="mailto:sales@resumifyapi.com" className="text-indigo-600 hover:text-indigo-800 font-medium">Contact Sales</a>
+    <a href="/privacy" className="text-indigo-600 hover:text-indigo-800 font-medium">Privacy Policy</a>
+  </div>
+  <p className="text-gray-400 text-xs mt-2">
+    © 2026 Resumify · Resume Intelligence API · GDPR Ready
+  </p>
+</div>
+
         </div>
       </footer>
     </div>
