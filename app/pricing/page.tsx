@@ -14,15 +14,11 @@ const CheckIcon = () => (
 export default function PricingPage() {
   const { user, profile, refreshProfile } = useAuth()
   const [loading, setLoading] = useState(false)
-  const [annual, setAnnual] = useState(false)
-  
-// Add this useEffect to refresh profile on successful payment
-useEffect(() => {
+
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.get('success') === 'true') {
-      // Refresh profile to get updated subscription
       refreshProfile()
-      // Clean up URL
       window.history.replaceState({}, '', '/pricing')
     }
   }, [refreshProfile])
@@ -37,17 +33,12 @@ useEffect(() => {
     try {
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          priceId,
-          userId: user.id  
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, userId: user.id }),
       })
 
       const data = await response.json()
-      
+
       if (data.url) {
         window.location.href = data.url
       } else {
@@ -64,61 +55,54 @@ useEffect(() => {
 
   const currentTier = profile?.subscription_tier || 'free'
   const usageCount = profile?.usage_count || 0
-  const usageLimit = currentTier === 'free' ? 20 : currentTier === 'pro' ? 100 : 500
+  const usageLimit = currentTier === 'free' ? 200 : currentTier === 'pro' ? 2000 : 20000
 
-// REPLACE entire plans array with:
-const plans = [
-  {
-    key: 'free' as const,
-    name: 'Developer',
-    price: 0,
-    priceLabel: 'forever',
-    volume: '200 parses/mo',
-    features: [
-      '200 resume parses per month',
-      'ATS compatibility scoring',
-      'Quality analysis & grading',
-      'Instant JSON results',
-      'REST API access',
-      'Community support',
-    ],
-  },
-  {
-    key: 'pro' as const,
-    name: 'Startup',
-    badge: 'Most Popular',
-    price: 49,
-    priceLabel: '/month',
-    volume: '2,000 parses/mo',
-    features: [
-      '2,000 resume parses per month',
-      'ATS compatibility scoring',
-      'Quality analysis & grading',
-      'Webhooks (push to your ATS/CRM)',
-      'JD match scoring',
-      'PDF + DOCX + TXT support',
-      'Email support',
-    ],
-  },
-  {
-    key: 'enterprise' as const,
-    name: 'Growth',
-    price: 199,
-    priceLabel: '/month',
-    volume: '20,000 parses/mo',
-    features: [
-      '20,000 resume parses per month',
-      'Everything in Startup',
-      'Batch ZIP upload API',
-      'Priority webhooks + retry logic',
-      '99.9% uptime SLA',
-      'White-label ready',
-      'Priority support',
-      'Custom Enterprise → Talk to Sales',
-    ],
-  },
-]
-
+  const plans = [
+    {
+      key: 'free' as const,
+      name: 'Developer',
+      badge: null,
+      price: 0,
+      features: [
+        '200 resume parses per month',
+        'ATS compatibility scoring',
+        'Quality analysis & grading',
+        'Instant JSON results',
+        'REST API access',
+        'Community support',
+      ],
+    },
+    {
+      key: 'pro' as const,
+      name: 'Startup',
+      badge: 'Most Popular',
+      price: 49,
+      features: [
+        '2,000 resume parses per month',
+        'ATS compatibility scoring',
+        'Quality analysis & grading',
+        'Webhooks (push to your ATS/CRM)',
+        'JD match scoring',
+        'PDF + DOCX + TXT support',
+        'Email support',
+      ],
+    },
+    {
+      key: 'business' as const,
+      name: 'Growth',
+      badge: null,
+      price: 199,
+      features: [
+        '20,000 resume parses per month',
+        'Everything in Startup',
+        'Batch ZIP upload API',
+        'Priority webhooks + retry logic',
+        '99.9% uptime SLA',
+        'White-label ready',
+        'Priority support',
+      ],
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
@@ -126,8 +110,8 @@ const plans = [
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-  <span className="text-2xl font-semibold text-gray-900">Resumify</span>
-</Link>
+            <span className="text-2xl font-semibold text-gray-900">Resumify</span>
+          </Link>
           <nav className="flex items-center gap-6">
             <Link href="/" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium">Home</Link>
             <Link href="/pricing" className="text-indigo-600 font-semibold text-sm">Pricing</Link>
@@ -141,19 +125,15 @@ const plans = [
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pt-16 pb-10 text-center">
         <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-full px-4 py-1.5 mb-6">
-  <span className="text-emerald-700 text-sm font-semibold">Start free, upgrade anytime</span>
-</div>
-        // REPLACE WITH:
-<h1 className="text-3xl font-bold text-gray-900">
-  Simple, Usage-Based API Pricing
-</h1>
-<p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
-  Start free. Scale as you grow. No contracts, no setup fees. 
-  Cancel anytime.
-</p>
+          <span className="text-emerald-700 text-sm font-semibold">Start free, upgrade anytime</span>
+        </div>
+        <h1 className="text-4xl font-bold text-gray-900">
+          Simple, Usage-Based API Pricing
+        </h1>
+        <p className="text-gray-500 text-lg mt-4 max-w-2xl mx-auto">
+          Start free. Scale as you grow. No contracts, no setup fees. Cancel anytime.
+        </p>
 
-
-        {/* Current plan badge - only for logged in users */}
         {user && profile && (
           <div className="mt-5 inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg">
             <span>Current Plan:</span>
@@ -162,22 +142,6 @@ const plans = [
             <span>Usage: <strong>{usageCount}/{usageLimit}</strong></span>
           </div>
         )}
-
-        {/* Annual Toggle */}
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <span className={`text-sm font-medium ${!annual ? "text-gray-900" : "text-gray-400"}`}>Monthly</span>
-          <button
-            onClick={() => setAnnual(!annual)}
-            className={`relative w-14 h-7 rounded-full transition-colors duration-300 ${annual ? "bg-indigo-500" : "bg-gray-300"}`}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-300 ${annual ? "translate-x-7" : "translate-x-0"}`}
-            />
-          </button>
-          <span className={`text-sm font-medium ${annual ? "text-gray-900" : "text-gray-400"}`}>
-            Annual <span className="text-emerald-600 font-semibold">(Save 20%)</span>
-          </span>
-        </div>
       </section>
 
       {/* Pricing Cards */}
@@ -187,10 +151,6 @@ const plans = [
             const planData = PLANS[plan.key]
             const isHighlighted = plan.key === 'pro'
             const isCurrent = currentTier === plan.key
-            const monthlyPrice = planData.price
-            const displayPrice = annual && monthlyPrice > 0
-              ? (monthlyPrice * 0.8).toFixed(2)
-              : monthlyPrice.toFixed(2)
 
             return (
               <div
@@ -201,7 +161,6 @@ const plans = [
                     : "bg-white border border-gray-200 shadow-md hover:shadow-lg text-gray-900"
                 }`}
               >
-                {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <span className="bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-md">
@@ -211,32 +170,21 @@ const plans = [
                 )}
 
                 <div className="p-8 flex flex-col flex-grow">
-                  {/* Plan Name */}
                   <h2 className={`text-lg font-bold uppercase tracking-wider ${isHighlighted ? "text-indigo-200" : "text-gray-500"}`}>
-                    {planData.name}
+                    {plan.name}
                   </h2>
 
-                  {/* Price */}
                   <div className="flex items-end gap-1 mt-4">
                     <span className={`text-5xl font-extrabold ${isHighlighted ? "text-white" : "text-gray-900"}`}>
-                      ${monthlyPrice === 0 ? '0' : displayPrice}
+                      ${plan.price === 0 ? '0' : plan.price + '.00'}
                     </span>
                     <span className={`text-base mb-1.5 ${isHighlighted ? "text-indigo-200" : "text-gray-400"}`}>
-                      {monthlyPrice > 0 ? "/month" : "forever"}
+                      {plan.price > 0 ? "/month" : "forever"}
                     </span>
                   </div>
 
-                  {/* Annual note */}
-                  {annual && monthlyPrice > 0 && (
-                    <span className={`text-xs mt-1 ${isHighlighted ? "text-indigo-200" : "text-emerald-600"}`}>
-                      billed ${(monthlyPrice * 0.8 * 12).toFixed(2)}/year
-                    </span>
-                  )}
-
-                  {/* Divider */}
                   <div className={`border-t my-6 ${isHighlighted ? "border-indigo-400/40" : "border-gray-100"}`} />
 
-                  {/* Features */}
                   <ul className="space-y-3 flex-grow">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
@@ -248,14 +196,11 @@ const plans = [
                     ))}
                   </ul>
 
-                  {/* CTA Button */}
                   {isCurrent ? (
                     <button
                       disabled
                       className={`mt-8 w-full text-center py-3 rounded-xl font-semibold text-sm cursor-not-allowed ${
-                        isHighlighted
-                          ? "bg-indigo-400/40 text-indigo-200"
-                          : "bg-gray-100 text-gray-400"
+                        isHighlighted ? "bg-indigo-400/40 text-indigo-200" : "bg-gray-100 text-gray-400"
                       }`}
                     >
                       Current Plan
@@ -277,70 +222,65 @@ const plans = [
                           : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200"
                       }`}
                     >
-                      {loading ? 'Redirecting...' : !user ? 'Sign in to Upgrade' : `Get ${planData.name}`}
+                      {loading ? 'Redirecting...' : !user ? 'Sign in to Upgrade' : `Get ${plan.name}`}
                     </button>
                   )}
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </section>
-      {/* Enterprise Custom Banner */}
-<div className="mt-8 bg-white border border-indigo-100 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
-  <div>
-    <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">
-      Enterprise
-    </p>
-    <h3 className="text-xl font-bold text-gray-900">
-      Need Unlimited Parses or White-Label?
-    </h3>
-    <p className="text-sm text-gray-500 mt-1">
-      Custom volume · Dedicated SLA · White-label · Invoice billing · 
-      Onboarding support
-    </p>
-  </div>
-  <a
-    href="mailto:sales@resumifyapi.com"
-    className="flex-shrink-0 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-md"
-  >
-    Talk to Sales →
-  </a>
-</div>
 
+      {/* Enterprise Banner */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+        <div className="bg-white border border-indigo-100 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">Enterprise</p>
+            <h3 className="text-xl font-bold text-gray-900">Need Unlimited Parses or White-Label?</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              Custom volume · Dedicated SLA · White-label · Invoice billing · Onboarding support
+            </p>
+          </div>
+          <a
+            href="mailto:sales@resumifyapi.com"
+            className="flex-shrink-0 px-6 py-3 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors shadow-md"
+          >
+            Talk to Sales →
+          </a>
+        </div>
+      </section>
 
-      {/* FAQ Section */}
+      {/* FAQ */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-24">
         <h2 className="text-2xl font-bold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
         <div className="space-y-6">
-    
-{[
-  {
-    q: "Do I need a credit card to start?",
-    a: "No. The Developer plan is free forever — 200 parses/month, full API access, no card required. Upgrade when your volume grows.",
-  },
-  {
-    q: "What file formats do you support?",
-    a: "PDF, DOCX, and TXT. Max file size 10MB per resume. Batch endpoint accepts ZIP files with up to 50 resumes.",
-  },
-  {
-    q: "How accurate is the parsing?",
-    a: "92% overall confidence with AI-powered extraction. Per-field confidence scores are included in every API response so you know exactly what to trust.",
-  },
-  {
-    q: "Is Resumify GDPR compliant?",
-    a: "Yes. Raw resume files are deleted immediately after parsing. Structured JSON is retained for 30 days. No third-party data sharing.",
-  },
-  {
-    q: "Can I integrate this with my ATS or CRM?",
-    a: "Yes. Startup and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
-  },
-  {
-  q: "Can I cancel anytime?",
-  a: "Yes. Cancel anytime from your dashboard — no contracts, no cancellation fees. Your plan stays active until the end of the billing period.",
-},
-].map((faq, i) => (
-
+          {[
+            {
+              q: "Do I need a credit card to start?",
+              a: "No. The Developer plan is free forever — 200 parses/month, full API access, no card required. Upgrade when your volume grows.",
+            },
+            {
+              q: "What file formats do you support?",
+              a: "PDF, DOCX, and TXT. Max file size 10MB per resume. Batch endpoint accepts ZIP files with up to 50 resumes.",
+            },
+            {
+              q: "How accurate is the parsing?",
+              a: "92% overall confidence with AI-powered extraction. Per-field confidence scores are included in every API response so you know exactly what to trust.",
+            },
+            {
+              q: "Is Resumify GDPR compliant?",
+              a: "Yes. Raw resume files are deleted immediately after parsing. Structured JSON is retained for 30 days. No third-party data sharing.",
+            },
+            {
+              q: "Can I integrate this with my ATS or CRM?",
+              a: "Yes. Startup and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
+            },
+            {
+              q: "Can I cancel anytime?",
+              a: "Yes. Cancel anytime from your dashboard — no contracts, no cancellation fees. Your plan stays active until the end of the billing period.",
+            },
+          ].map((faq, i) => (
             <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
               <h3 className="text-base font-semibold text-gray-900">{faq.q}</h3>
               <p className="text-sm text-gray-500 mt-2 leading-relaxed">{faq.a}</p>
@@ -352,19 +292,15 @@ const plans = [
       {/* Footer */}
       <footer className="border-t border-gray-200 bg-white/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 text-center">
-      
-<div className="space-y-2">
-  <div className="flex justify-center flex-wrap gap-6 text-sm">
-    <a href="/api-info" className="text-indigo-600 hover:text-indigo-800 font-medium">API Docs</a>
-    <a href="/pricing" className="text-indigo-600 hover:text-indigo-800 font-medium">Pricing</a>
-    <a href="mailto:sales@resumifyapi.com" className="text-indigo-600 hover:text-indigo-800 font-medium">Contact Sales</a>
-    <a href="/privacy" className="text-indigo-600 hover:text-indigo-800 font-medium">Privacy Policy</a>
-  </div>
-  <p className="text-gray-400 text-xs mt-2">
-    © 2026 Resumify · Resume Intelligence API · GDPR Ready
-  </p>
-</div>
-
+          <div className="space-y-2">
+            <div className="flex justify-center flex-wrap gap-6 text-sm">
+              <a href="/api-info" className="text-indigo-600 hover:text-indigo-800 font-medium">API Docs</a>
+              <a href="/pricing" className="text-indigo-600 hover:text-indigo-800 font-medium">Pricing</a>
+              <a href="mailto:sales@resumifyapi.com" className="text-indigo-600 hover:text-indigo-800 font-medium">Contact Sales</a>
+              <a href="/privacy" className="text-indigo-600 hover:text-indigo-800 font-medium">Privacy Policy</a>
+            </div>
+            <p className="text-gray-400 text-xs mt-2">© 2026 Resumify · Resume Intelligence API · GDPR Ready</p>
+          </div>
         </div>
       </footer>
     </div>

@@ -33,7 +33,7 @@ export const PLANS = {
   pro: {
     name: 'Startup',
     price: 49,
-    priceId: 'price_1TBx9w1huLM0ohjU2yJDUkd8', // ← create in Stripe dashboard
+    priceId: 'price_1TBx9w1huLM0ohjU2yJDUkd8',
     features: [
       '2,000 resume parses per month',
       'ATS compatibility scoring',
@@ -53,10 +53,10 @@ export const PLANS = {
       hasJDMatching: true,
     },
   },
-  enterprise: {
+  business: {
     name: 'Growth',
     price: 199,
-    priceId: 'price_1TBxAJ1huLM0ohjUvckKtDRU', // ← create in Stripe dashboard
+    priceId: 'price_1TBxAJ1huLM0ohjUvckKtDRU',
     features: [
       '20,000 resume parses per month',
       'Everything in Startup',
