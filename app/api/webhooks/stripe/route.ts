@@ -34,27 +34,26 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
 
       case 'checkout.session.completed': {
-        const session = event.data.object as Stripe.Checkout.Session
-        const userId = session.metadata?.user_id
+  const session = event.data.object as Stripe.Checkout.Session
 
-        if (userId && session.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(
-            session.subscription as string
-          )
-          const priceId = subscription.items.data[0].price.id
-          const tier = getTierFromPriceId(priceId)
+  if (session.subscription && session.customer) {
+    const subscription = await stripe.subscriptions.retrieve(
+      session.subscription as string
+    )
+    const priceId = subscription.items.data[0].price.id
+    const tier = getTierFromPriceId(priceId)
 
-          await supabase
-            .from('users')          // ✅ correct table
-            .update({
-              subscription_tier: tier,
-              stripe_subscription_id: subscription.id,
-              stripe_customer_id: session.customer as string,
-            })
-            .eq('id', userId)
-        }
-        break
-      }
+    await supabase
+      .from('users')
+      .update({
+        subscription_tier: tier,
+        stripe_subscription_id: subscription.id,
+        stripe_customer_id: session.customer as string,
+      })
+      .eq('stripe_customer_id', session.customer as string)  // ✅ match by customer
+  }
+  break
+}
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription
