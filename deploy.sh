@@ -2,7 +2,7 @@
 set -e
 
 echo "🔨 Building Docker image..."
-docker build \
+docker build --no-cache \
   --build-arg NEXT_PUBLIC_API_URL=https://api.resumifyapi.com \
   --build-arg NEXT_PUBLIC_APP_URL=https://resumifyapi.com \
   --build-arg NEXT_PUBLIC_SUPABASE_URL=https://msjhrsnyuftyaykxpmux.supabase.co \
