@@ -6,72 +6,76 @@ import { supabase } from "@/lib/supabase";
 import AuthModal from "./AuthModal";
 import Link from "next/link";
 
+const TIER_DISPLAY_NAMES: Record<string, string> = {
+  free: "Developer",
+  developer: "Developer",
+  pro: "Starter",
+  startup: "Starter",
+  business: "Growth",
+  growth: "Growth",
+};
+
 export default function CTAHeader() {
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const { user , profile } = useAuth();
+  const { user, profile } = useAuth();
 
   const handleSignOut = useCallback(async () => {
-  console.log('Sign out button clicked');
-  
-  // Clear all storage immediately
-  localStorage.clear();
-  sessionStorage.clear();
-  
-  // Fire and forget the Supabase signOut
-  supabase.auth.signOut().catch((err) => {
-    console.error('Supabase signOut error:', err);
-  });
-  
-  // Force full reload (not just href change)
-  window.location.reload();
-}, []);
+    console.log('Sign out button clicked');
+    localStorage.clear();
+    sessionStorage.clear();
+    supabase.auth.signOut().catch((err) => {
+      console.error('Supabase signOut error:', err);
+    });
+    window.location.reload();
+  }, []);
 
   return (
     <>
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            
+
             <Link href="/" className="flex items-center gap-2">
-            <span className="font-semibold text-2xl">Resumify</span>
-</Link>
+              <span className="font-semibold text-2xl">Resumify</span>
+            </Link>
+
             {/* Navigation */}
             <div className="flex items-center gap-6">
-              <Link 
-                href="/api-info" 
+              <Link
+                href="/api-info"
                 className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
               >
                 API Docs
               </Link>
-              <Link 
-                href="/pricing" 
+              <Link
+                href="/pricing"
                 className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
               >
                 Pricing
               </Link>
-              
+
               {user ? (
-  <div className="flex items-center gap-4">
-    {profile && (
-      <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700">
-        {profile.subscription_tier}
-      </span>
-    )}
-    <button 
-      onClick={handleSignOut}
-      className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
-    >
-      Sign Out
-    </button>
-  </div>
-) : (
-  <button 
-    onClick={() => setShowAuthModal(true)}
-    className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
-  >
-    Get Started
-  </button>
-)}
+                <div className="flex items-center gap-4">
+                  {profile && (
+                    <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700">
+                      {TIER_DISPLAY_NAMES[profile.subscription_tier] || profile.subscription_tier}
+                    </span>
+                  )}
+                  <button
+                    onClick={handleSignOut}
+                    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="bg-black text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+                >
+                  Get Started
+                </button>
+              )}
             </div>
           </div>
         </div>
