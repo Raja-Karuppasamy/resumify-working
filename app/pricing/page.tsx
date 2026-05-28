@@ -5,6 +5,34 @@ import { useAuth } from '@/lib/auth-context'
 import { PLANS } from '@/lib/stripe'
 import Link from 'next/link'
 
+const TIER_DISPLAY_NAMES: Record<string, string> = {
+  free: 'Developer',
+  developer: 'Developer',
+  pro: 'Starter',
+  startup: 'Starter',
+  business: 'Growth',
+  growth: 'Growth',
+}
+
+const TIER_LIMITS: Record<string, number> = {
+  free: 200,
+  developer: 200,
+  pro: 2000,
+  startup: 2000,
+  business: 20000,
+  growth: 20000,
+}
+
+// Map DB tier values to plan keys used in the plans array
+const TIER_TO_PLAN_KEY: Record<string, string> = {
+  free: 'free',
+  developer: 'free',
+  pro: 'pro',
+  startup: 'pro',
+  business: 'business',
+  growth: 'business',
+}
+
 const CheckIcon = () => (
   <svg className="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -54,8 +82,10 @@ export default function PricingPage() {
   }
 
   const currentTier = profile?.subscription_tier || 'free'
+  const currentPlanKey = TIER_TO_PLAN_KEY[currentTier] || 'free'
   const usageCount = profile?.usage_count || 0
-  const usageLimit = currentTier === 'free' ? 200 : currentTier === 'pro' ? 2000 : 20000
+  const usageLimit = TIER_LIMITS[currentTier] || 200
+  const displayName = TIER_DISPLAY_NAMES[currentTier] || currentTier
 
   const plans = [
     {
@@ -74,7 +104,7 @@ export default function PricingPage() {
     },
     {
       key: 'pro' as const,
-      name: 'Startup',
+      name: 'Starter',
       badge: 'Most Popular',
       price: 49,
       features: [
@@ -94,7 +124,7 @@ export default function PricingPage() {
       price: 199,
       features: [
         '20,000 resume parses per month',
-        'Everything in Startup',
+        'Everything in Starter',
         'Batch ZIP upload API',
         'Priority webhooks + retry logic',
         '99.9% uptime SLA',
@@ -115,9 +145,11 @@ export default function PricingPage() {
           <nav className="flex items-center gap-6">
             <Link href="/" className="text-gray-600 hover:text-indigo-600 transition-colors text-sm font-medium">Home</Link>
             <Link href="/pricing" className="text-indigo-600 font-semibold text-sm">Pricing</Link>
-            <Link href="/" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">
-              Get Started
-            </Link>
+            {!user && (
+              <Link href="/" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm">
+                Get Started
+              </Link>
+            )}
           </nav>
         </div>
       </header>
@@ -137,7 +169,7 @@ export default function PricingPage() {
         {user && profile && (
           <div className="mt-5 inline-flex items-center gap-2 bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg">
             <span>Current Plan:</span>
-            <strong className="capitalize">{currentTier}</strong>
+            <strong>{displayName}</strong>
             <span className="text-indigo-400">•</span>
             <span>Usage: <strong>{usageCount}/{usageLimit}</strong></span>
           </div>
@@ -150,7 +182,7 @@ export default function PricingPage() {
           {plans.map((plan) => {
             const planData = PLANS[plan.key]
             const isHighlighted = plan.key === 'pro'
-            const isCurrent = currentTier === plan.key
+            const isCurrent = currentPlanKey === plan.key
 
             return (
               <div
@@ -274,7 +306,7 @@ export default function PricingPage() {
             },
             {
               q: "Can I integrate this with my ATS or CRM?",
-              a: "Yes. Startup and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
+              a: "Yes. Starter and Growth plans include webhooks — register a URL and parsed JSON is delivered to your system automatically after each parse.",
             },
             {
               q: "Can I cancel anytime?",
