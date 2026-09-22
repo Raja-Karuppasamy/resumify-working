@@ -742,14 +742,19 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
             </div>
 
             {/* Moat callout — Skill IDs that don't drift */}
-            <div className="mt-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
-              <h3 className="text-xl font-bold mb-3">🎯 Skill IDs that don't drift</h3>
-              <p className="text-sm text-indigo-50 leading-relaxed">
-                Most parsers re-extract raw text every time — so the same candidate, re-parsed next month, can
-                come back tagged differently. Resumify's skill IDs are stable and versioned: once a candidate is
-                tagged, that ID persists. Build search, matching, and reporting on top of it without your
-                taxonomy silently rotting underneath you.
-              </p>
+            <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 flex-shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-2xl">🎯</div>
+                <div>
+                  <h3 className="text-base font-bold mb-1">Skill IDs that don't drift</h3>
+                  <p className="text-sm text-indigo-50 leading-relaxed">
+                    Most parsers re-extract raw text every time — so the same candidate, re-parsed next month, can
+                    come back tagged differently. Resumify's skill IDs are stable and versioned: once a candidate is
+                    tagged, that ID persists. Build search, matching, and reporting on top of it without your
+                    taxonomy silently rotting underneath you.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Integrations Strip */}
