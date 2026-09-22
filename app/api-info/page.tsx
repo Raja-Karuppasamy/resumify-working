@@ -123,13 +123,55 @@ export default function ApiInfoPage() {
     "email": "jane@example.com",
     "role_level": "Senior",
     "years_of_experience_total": 8,
-    "skills": { "programming_languages": ["Python","TypeScript"] }
+    "skills": {
+      "programming_languages": [
+        { "raw_text": "TypeScript", "skill_id": "skill_typescript_v1", "confidence": 0.96 },
+        { "raw_text": "NodeJS", "skill_id": "skill_nodejs_v1", "confidence": 0.94 }
+      ]
+    }
   },
   "ats_compatibility": { "score": 95, "verdict": "Excellent" },
   "quality_analysis": { "score": 82, "grade": "B" },
   "confidence": { "overall": 0.92 }
 }`}
             </pre>
+          </div>
+        </div>
+
+        {/* Skill Taxonomy */}
+        <div className="mb-14">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Skill Taxonomy</h2>
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Every resume Resumify parses is mapped to a normalized skill taxonomy. Instead of returning raw
+              extracted strings ("Node.js", "NodeJS", "Node" — all different text, same skill), every match
+              resolves to a single stable <code className="bg-gray-100 px-1.5 py-0.5 rounded text-indigo-700 font-mono text-xs">skill_id</code>.
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-gray-600">
+              <li>
+                <strong className="text-gray-800">Search stays consistent.</strong> Query by{" "}
+                <code className="bg-gray-100 px-1 rounded text-xs font-mono">skill_id</code>, not fuzzy text
+                matching, and get every candidate who has that skill — regardless of how they phrased it.
+              </li>
+              <li>
+                <strong className="text-gray-800">Re-parses don't drift.</strong> If you re-parse a candidate's
+                updated resume next year, the same skill still resolves to the same{" "}
+                <code className="bg-gray-100 px-1 rounded text-xs font-mono">skill_id</code>. Your downstream
+                tags, saved searches, and reports don't silently break.
+              </li>
+              <li>
+                <strong className="text-gray-800">Versioned, not static.</strong> As the taxonomy evolves, IDs
+                are versioned (<code className="bg-gray-100 px-1 rounded text-xs font-mono">_v1</code>,{" "}
+                <code className="bg-gray-100 px-1 rounded text-xs font-mono">_v2</code>) so existing
+                integrations aren't broken by taxonomy changes.
+              </li>
+              <li>
+                <strong className="text-gray-800">Build on top of it.</strong> Key your own database, matching
+                logic, and analytics directly to <code className="bg-gray-100 px-1 rounded text-xs font-mono">skill_id</code>{" "}
+                instead of re-normalizing text on your end.
+              </li>
+            </ul>
+            <p className="mt-4 text-xs text-gray-400">Included on all plans (Developer, Starter, Growth, Enterprise).</p>
           </div>
         </div>
 

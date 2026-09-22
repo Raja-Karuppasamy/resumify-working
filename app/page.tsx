@@ -561,17 +561,18 @@ export default function Page() {
             <section className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-indigo-200/50 border border-indigo-50/50">
               <div className="px-8 pt-8 pb-6 border-b border-indigo-100">
                 <p className="text-xs font-bold tracking-wider text-indigo-600 uppercase">
-                  For Recruiters · ATS Platforms · Job Boards · Universities
+                  For Staffing Agencies · ATS Platforms · Universities
                 </p>
                 <h2 className="mt-2 text-3xl font-bold text-gray-900">
-                  Resume Intelligence API
+                  Your ATS is only as good as its search. Fix the data going in.
                 </h2>
                 <p className="mt-2 text-base text-gray-600">
-                  Turn any CV into structured hiring data in under 200ms. ATS scoring,
-                  quality grading, and 56-field extraction — drop into your stack with a single API call.
+                  Resumify normalizes every resume into a stable, structured taxonomy — so skills,
+                  titles, and experience search and dedupe correctly across your candidate database,
+                  even as formats and phrasing change.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {["⚡ <200ms Response","🎯 92% Parse Confidence","✅ 95/100 ATS Score","🔒 GDPR-Ready","📄 PDF · DOCX · TXT"].map((badge) => (
+                  {["⚡ <200ms per parse","🎯 Stable skill IDs","✅ 92% parse confidence"].map((badge) => (
                     <span key={badge} className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
                       {badge}
                     </span>
@@ -639,7 +640,7 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
                         </>
                       ) : (
                         <>
-                          <span>🤖 Parse Resume — Get Structured JSON</span>
+                          <span>🤖 Parse a Resume — See the Normalized Output</span>
                           <span className="ml-2 text-indigo-200 group-hover:text-white transition-colors text-sm">Free · No card required</span>
                         </>
                       )}
@@ -696,38 +697,63 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
               </div>
             </section>
 
-            {/* Use-case strip — outside the white card */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 text-center">
-                🏢 <strong>Staffing Agencies</strong><br/>
-                <span className="text-xs">Batch parse 100s of CVs daily</span>
+            {/* Problem Section */}
+            <div className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-100 shadow-lg">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Every resume parser gives you text. None of them give you data you can search on.
+              </h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Three resumes, three ways of saying the same skill: "Node.js," "NodeJS," "Node." Your ATS search
+                treats them as three different things. Multiply that across 50,000 CVs and your recruiters are
+                manually re-tagging candidates, your dedup breaks, and "find everyone with X skill" silently
+                misses half of them.
+              </p>
+              <p className="mt-3 text-sm text-gray-600 leading-relaxed">
+                Resumify solves this at the parsing layer: every resume is mapped to the same normalized skill
+                taxonomy, so the ID for "Node.js" never changes — no matter how the candidate wrote it, and no
+                matter which version of their resume you re-parse six months from now.
+              </p>
+            </div>
+
+            {/* Primary use case — Staffing Agencies */}
+            <div className="mt-8">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border-2 border-indigo-200 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className="h-12 w-12 flex-shrink-0 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl">🏢</div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-1">Built for Staffing & Recruiting Agencies</h3>
+                    <p className="text-sm text-gray-600">
+                      Batch-parse hundreds of CVs a day. Webhooks push normalized JSON straight into your
+                      ATS/CRM — searchable and deduped from the moment it lands, not after a data-cleanup pass.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800 text-center">
-                ⚙️ <strong>ATS & HR SaaS</strong><br/>
-                <span className="text-xs">Drop-in API, JSON output, webhooks</span>
-              </div>
-              <div className="rounded-lg border border-purple-200 bg-purple-50 px-4 py-3 text-sm text-purple-800 text-center">
-                🎓 <strong>Universities</strong><br/>
-                <span className="text-xs">Score student CVs at scale</span>
+
+              {/* Secondary use cases — smaller, de-emphasized */}
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                  ⚙️ <strong>ATS & HR Platforms</strong> — drop-in API, normalized JSON output, no NLP team needed.
+                </div>
+                <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                  🎓 <strong>University Career Centers</strong> — benchmark student CVs against a consistent skill taxonomy.
+                </div>
               </div>
             </div>
 
-            {/* Features Section */}
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl mb-4">🏢</div>
-                <h3 className="font-bold text-gray-900 mb-2">Staffing Agencies</h3>
-                <p className="text-sm text-gray-600">Process 100s of CVs daily. Webhooks push structured JSON directly into your ATS or CRM — zero manual entry.</p>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl mb-4">⚙️</div>
-                <h3 className="font-bold text-gray-900 mb-2">ATS & HR Platforms</h3>
-                <p className="text-sm text-gray-600">Add resume parsing to your product in one afternoon. REST API, 56-field JSON output, no NLP team needed.</p>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white text-2xl mb-4">🎓</div>
-                <h3 className="font-bold text-gray-900 mb-2">University Career Centers</h3>
-                <p className="text-sm text-gray-600">Score and benchmark student CVs at scale. Identify skill gaps across your graduating cohort before campus recruitment.</p>
+            {/* Moat callout — Skill IDs that don't drift */}
+            <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+              <div className="flex items-start gap-4">
+                <div className="h-12 w-12 flex-shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-2xl">🎯</div>
+                <div>
+                  <h3 className="text-base font-bold mb-1">Skill IDs that don't drift</h3>
+                  <p className="text-sm text-indigo-50 leading-relaxed">
+                    Most parsers re-extract raw text every time — so the same candidate, re-parsed next month, can
+                    come back tagged differently. Resumify's skill IDs are stable and versioned: once a candidate is
+                    tagged, that ID persists. Build search, matching, and reporting on top of it without your
+                    taxonomy silently rotting underneath you.
+                  </p>
+                </div>
               </div>
             </div>
 
