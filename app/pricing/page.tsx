@@ -109,6 +109,7 @@ export default function PricingPage() {
       price: 49,
       features: [
         '2,000 resume parses per month',
+        'Stable skill-ID taxonomy (not just raw JSON)',
         'ATS compatibility scoring',
         'Quality analysis & grading',
         'Webhooks (push to your ATS/CRM)',

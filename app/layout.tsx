@@ -6,8 +6,8 @@ import { AuthProvider } from "../lib/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Resumify - ATS Resume Checker for Recruiters",
-  description: "Check if resumes will pass ATS in 5 seconds. Get instant compatibility scores and quality checks. Trusted by recruiting agencies.",
+  title: "Resumify — Resume Intelligence API with Stable Skill Taxonomy",
+  description: "Normalize resumes into structured, searchable candidate data. Stable skill IDs that don't drift between re-parses. Built for staffing agencies and ATS platforms.",
 };
 
 export default function RootLayout({
