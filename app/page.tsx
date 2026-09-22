@@ -572,7 +572,7 @@ export default function Page() {
                   even as formats and phrasing change.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {["⚡ <200ms per parse","🎯 Stable skill IDs — not just raw text","✅ 92% parse confidence","🔒 GDPR-ready","📄 PDF · DOCX · TXT"].map((badge) => (
+                  {["⚡ <200ms per parse","🎯 Stable skill IDs","✅ 92% parse confidence"].map((badge) => (
                     <span key={badge} className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
                       {badge}
                     </span>
