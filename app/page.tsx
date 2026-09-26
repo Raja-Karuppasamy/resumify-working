@@ -564,15 +564,14 @@ export default function Page() {
                   For Staffing Agencies · ATS Platforms · Universities
                 </p>
                 <h2 className="mt-2 text-3xl font-bold text-gray-900">
-                  Your ATS is only as good as its search. Fix the data going in.
+                  Stop re-typing resumes into your ATS.
                 </h2>
                 <p className="mt-2 text-base text-gray-600">
-                  Resumify normalizes every resume into a stable, structured taxonomy — so skills,
-                  titles, and experience search and dedupe correctly across your candidate database,
-                  even as formats and phrasing change.
+                  Resumify turns any resume — PDF, DOCX, or plain text — into clean structured JSON:
+                  contact info, work history, education, and skills, extracted in one API call.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {["⚡ <200ms per parse","🎯 Stable skill IDs","✅ 92% parse confidence"].map((badge) => (
+                  {["⚡ <200ms per parse","✅ 92% parse confidence","📄 56-field extraction"].map((badge) => (
                     <span key={badge} className="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100">
                       {badge}
                     </span>
@@ -700,12 +699,12 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
             {/* Problem + Solution — consolidated, one pass */}
             <div className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg">
               <h3 className="text-lg font-bold text-gray-900 mb-2">
-                "Node.js," "NodeJS," "Node" — same skill, three different tags. Multiply that across 50,000 CVs
-                and your search and dedup quietly break.
+                Manually copying names, roles, and skills out of PDFs doesn't scale past a handful of resumes a day.
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Resumify fixes it at the parsing layer: every skill resolves to the same stable, versioned ID —
-                so re-parsing a candidate's resume next year doesn't silently change how they're tagged.
+                Resumify does the extraction for you: upload a resume, get back structured JSON with contact
+                details, work history, education, and skills — with a confidence score on every field, so you
+                know what to trust and what to spot-check.
               </p>
             </div>
 
@@ -717,8 +716,8 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
                   <div>
                     <h3 className="font-bold text-gray-900 mb-1">Built for Staffing & Recruiting Agencies</h3>
                     <p className="text-sm text-gray-600">
-                      Batch-parse hundreds of CVs a day. Webhooks push normalized JSON straight into your
-                      ATS/CRM — searchable and deduped from the moment it lands, not after a data-cleanup pass.
+                      Batch-parse hundreds of CVs a day. Webhooks push structured JSON straight into your
+                      ATS or CRM — zero manual data entry.
                     </p>
                   </div>
                 </div>
@@ -727,10 +726,10 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
               {/* Secondary use cases — smaller, de-emphasized */}
               <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-                  ⚙️ <strong>ATS & HR Platforms</strong> — drop-in API, normalized JSON output, no NLP team needed.
+                  ⚙️ <strong>ATS & HR Platforms</strong> — drop-in API, structured JSON output, no NLP team needed.
                 </div>
                 <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
-                  🎓 <strong>University Career Centers</strong> — benchmark student CVs against a consistent skill taxonomy.
+                  🎓 <strong>University Career Centers</strong> — score and benchmark student CVs at scale.
                 </div>
               </div>
             </div>
