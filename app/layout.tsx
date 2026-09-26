@@ -6,8 +6,8 @@ import { AuthProvider } from "../lib/auth-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Resumify — Resume Intelligence API with Stable Skill Taxonomy",
-  description: "Normalize resumes into structured, searchable candidate data. Stable skill IDs that don't drift between re-parses. Built for staffing agencies and ATS platforms.",
+  title: "Resumify — Resume Intelligence API for Staffing & ATS",
+  description: "Turn any resume into structured, searchable candidate data in under 200ms. Built for staffing agencies and ATS platforms.",
 };
 
 export default function RootLayout({
