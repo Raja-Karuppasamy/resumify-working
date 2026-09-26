@@ -697,21 +697,15 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
               </div>
             </section>
 
-            {/* Problem Section */}
-            <div className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-indigo-100 shadow-lg">
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Every resume parser gives you text. None of them give you data you can search on.
+            {/* Problem + Solution — consolidated, one pass */}
+            <div className="mt-12 bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100 shadow-lg">
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                "Node.js," "NodeJS," "Node" — same skill, three different tags. Multiply that across 50,000 CVs
+                and your search and dedup quietly break.
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Three resumes, three ways of saying the same skill: "Node.js," "NodeJS," "Node." Your ATS search
-                treats them as three different things. Multiply that across 50,000 CVs and your recruiters are
-                manually re-tagging candidates, your dedup breaks, and "find everyone with X skill" silently
-                misses half of them.
-              </p>
-              <p className="mt-3 text-sm text-gray-600 leading-relaxed">
-                Resumify solves this at the parsing layer: every resume is mapped to the same normalized skill
-                taxonomy, so the ID for "Node.js" never changes — no matter how the candidate wrote it, and no
-                matter which version of their resume you re-parse six months from now.
+                Resumify fixes it at the parsing layer: every skill resolves to the same stable, versioned ID —
+                so re-parsing a candidate's resume next year doesn't silently change how they're tagged.
               </p>
             </div>
 
@@ -737,22 +731,6 @@ className="flex flex-col items-center justify-center px-8 py-12 border-2 border-
                 </div>
                 <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
                   🎓 <strong>University Career Centers</strong> — benchmark student CVs against a consistent skill taxonomy.
-                </div>
-              </div>
-            </div>
-
-            {/* Moat callout — Skill IDs that don't drift */}
-            <div className="mt-6 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-              <div className="flex items-start gap-4">
-                <div className="h-12 w-12 flex-shrink-0 rounded-xl bg-white/15 flex items-center justify-center text-2xl">🎯</div>
-                <div>
-                  <h3 className="text-base font-bold mb-1">Skill IDs that don't drift</h3>
-                  <p className="text-sm text-indigo-50 leading-relaxed">
-                    Most parsers re-extract raw text every time — so the same candidate, re-parsed next month, can
-                    come back tagged differently. Resumify's skill IDs are stable and versioned: once a candidate is
-                    tagged, that ID persists. Build search, matching, and reporting on top of it without your
-                    taxonomy silently rotting underneath you.
-                  </p>
                 </div>
               </div>
             </div>
